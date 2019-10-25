@@ -33,3 +33,6 @@ Przetestować używając komend:
 
 **Pracujesz nad stroną internetową?**:
 1. `npm run dev-server` - automatycznie buduje i wykonuje aplikację w przeglądarce po wykryciu zmian w kodzie (zmiany wyszukiwane są tylko w folderze src/)
+
+## Zarządzanie projektem
+https://trello.com/b/dpu2DmbG/projekt
