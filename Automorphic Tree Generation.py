@@ -76,3 +76,8 @@ b = [1, 4, 1, 0]
 swap(t1, a, b)
 
 print(t1[1][4][1][3] == c2 and t1[1][4][1][0] == c1)
+
+t1 = generateTree(2, 2)
+print(t1)
+swap(t1, [1, 0], [1, 1])
+print(t1 == [3, [2, 1]])
