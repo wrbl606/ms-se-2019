@@ -1,7 +1,9 @@
 from swap import swap
-
+from swap2 import swap2
 
 # n - levels, p - vertices
+
+
 def nodesOnLvl(n, p):
     return p**n
 
@@ -55,52 +57,25 @@ def generateTree(n, p):
             tree = temp
         temp = []
 
-    return tree
+    return tree[0]
 
 
-def st(t):
-    return ('{}'.format(t).replace(
-        "[", '\t').replace("]", ''))
+#lvls, vertices
+t1 = generateTree(3, 5)
+print('\n\n\n')
+print(t1)
+print('\n\n')
 
 
-# lvls, vertices
-tree = generateTree(4, 2)
-print('\n\n{}'.format(tree))
-print(st(tree))
+a = [1, 0]
+b = [1, 2]
 
-tree[0][1][0], tree[0][1][1] = swap(tree[0][1][0], tree[0][1][1])
-print(st(tree))
+print(t1[1][0])
+print(t1[1][2])
 
+print(swap2(t1, a, b))
+print(t1)
+#t2 = generateTree(5, 3)
+#print('\n', t2)
 
-tree2 = generateTree(2, 4)
-print('\n\n{}'.format(tree2))
-print(st(tree2))
-tree2[0][1][0], tree2[0][1][1] = swap(tree2[0][1][0], tree2[0][1][1])
-print(st(tree2))
-
-tree3 = generateTree(3, 15)
-print('\n\n{}'.format(tree3))
-print(st(tree3))
-
-print("\n\n")
-print(tree3[0][1])
-tree3[0][1][3][1], tree3[0][1][4][1] = swap(
-    tree3[0][1][3][1], tree3[0][1][4][1])
-print("\n")
-print(tree3[0][1])
-
-'''
-# generuje sie szybko, drukowanie zabiera duzo czasu
-tree4 = generateTree(10, 5)
-# print('\n\n{}'.format(tree3))
-# print(st(tree4))
-
-
-print('\n\n{}'.format(tree4).replace(", [", "\n").replace(
-    "[", "\t").replace(']', ''), "\n\tlenght: ", len(tree4))
-'''
-
-# ^ raczej próba wydajności niż faktyczne sprawdzenie
-
-
-# x, y = [], []
+#swap2(t1, )
