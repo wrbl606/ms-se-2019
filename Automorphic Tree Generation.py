@@ -1,7 +1,9 @@
 def swap(tree, list1, list2):
+    if (list1 == list2):
+        return tree
     if (list1[:-1] != list2[:-1]):
         print("Different parents! Cannot swap.")
-        return
+        return tree
     if list1[0] == list2[0]:
         swap(tree[list1[0]], list1[1:], list2[1:])
     else:
