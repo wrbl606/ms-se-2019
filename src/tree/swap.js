@@ -35,25 +35,30 @@ export function swap (branch1, branch2) {
  * @param {Array} list2
  */
 export function newSwap (tree, list1, list2) {
-  console.debug(typeof tree, list1, list2)
-
   // TODO: zapytać Maćka po co odwraca tablice w wersji Pythonowej
   const newTree = [...tree]
-  console.debug(`${list1[0]} vs ${list2[0]}`)
-  if (list1[0] === list2[0]) {
+  if (compareArrays(list1[0], list2[0])) {
     const newList1 = [...list1]
     newList1.shift()
     const newList2 = [...list2]
     newList2.shift()
-    console.debug(list1[0])
-    return newSwap(newTree[list1[0]], newList1, newList2)
+    const newTree2 = [...newTree]
+    delete newTree2[list1[0]]
+    newTree2[list1[0]] = newSwap(newTree[list1[0]], newList1, newList2)
+    return newTree2
   } else {
-    console.log('1')
     const a = [...list1].pop()
     const b = [...list2].pop()
+    const swapCache = newTree[a]
     newTree[a] = newTree[b]
-    newTree[b] = newTree[a]
-    console.debug('newTree', typeof newTree)
+    newTree[b] = swapCache
     return newTree
   }
+}
+
+export function compareArrays (array1, array2) {
+  if (typeof array1 !== 'object' || typeof array2 !== 'object') {
+    return array1 === array2
+  }
+  return array1.length === array2.length && array1.sort().every(function (value, index) { return value === array2.sort()[index] })
 }

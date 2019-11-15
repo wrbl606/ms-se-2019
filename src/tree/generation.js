@@ -46,7 +46,7 @@ export function generateTree (n, p) {
   for (let i = 0; i < nodesOnLvl(n - 1, p); i++) {
     temp.push(arr.pop())
     if ((i + 1) % p === 0 && i !== 0) {
-      tree.push([arr.pop(), ...temp])
+      tree.push([arr.pop(), temp])
       temp = []
     }
   }
@@ -68,5 +68,5 @@ export function generateTree (n, p) {
     temp = []
   }
 
-  return tree
+  return tree[0]
 }
