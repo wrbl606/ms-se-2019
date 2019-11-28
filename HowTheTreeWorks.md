@@ -18,9 +18,9 @@
         3. tree[a], tree[b] = tree[b], tree[a] (this is an actual swap of the nodes)
         4. return tree, end function
 
-
-def nodesOnLvl(n, p):
-    return p**n
+## 2. How many nodes are on _n_-th level
+function nodes_on_level(n ^ number_of_vertices_from_every_node):
+    return (number_of_vertices_from_every_node)^n
 
 
 def totalNodes(n, p):
