@@ -9,7 +9,7 @@
         2. return tree
         3. skip rest of the function
         
-    (now comes the tricky part - recursion)
+       (now comes the tricky part - recursion)
     3. if the first coordinate is the same for both nodes
         swap(tree[first_node[first coordinate]], first_node[enter the "first node's tree" at first coordinate], second_node[enter the "second node's tree" at first coordinate])
     else:
