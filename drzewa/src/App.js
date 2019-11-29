@@ -1,5 +1,4 @@
 import React from 'react'
-import './App.css'
 import { makeStyles } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -20,7 +19,6 @@ import FormGroup from '@material-ui/core/FormGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import ListItem from '@material-ui/core/ListItem'
 import Container from '@material-ui/core/Container'
-import { textAlign } from '@material-ui/system'
 
 const Spacer = require('react-spacer')
 const SidebarStyle = makeStyles(theme => ({
