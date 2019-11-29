@@ -66,18 +66,9 @@ export function ControlledOpenSelect () {
 
 export default function PermanentDrawer () {
   const [ilosc, wezlyUpdate] = React.useState('')
-  const [open, setOpen] = React.useState(false)
   const classes = SidebarStyle()
   const handleChange = event => {
     wezlyUpdate(event.target.value)
-  }
-
-  const handleClose = () => {
-    setOpen(false)
-  }
-
-  const handleOpen = () => {
-    setOpen(true)
   }
 
   return (
