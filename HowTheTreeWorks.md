@@ -18,7 +18,7 @@
         3. tree[a], tree[b] = tree[b], tree[a] (this is an actual swap of the nodes)
         4. return tree, end function
 
-## 2. How many nodes are on _n_-th level
+## 2. How many nodes are there on the _n_-th level?
   number of _vertices_ deriving from each _node_ (except for the final leaves, for obvious reasons) raised to the _n_-th level's power  
 
 ## 3. How many nodes are there in total in the tree?
