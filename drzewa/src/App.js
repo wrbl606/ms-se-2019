@@ -6,6 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import List from '@material-ui/core/List'
+import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
@@ -19,12 +20,14 @@ import FormGroup from '@material-ui/core/FormGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import ListItem from '@material-ui/core/ListItem'
 import Container from '@material-ui/core/Container'
+import { textAlign } from '@material-ui/system'
 
 const Spacer = require('react-spacer')
 const SidebarStyle = makeStyles(theme => ({
   formControl:
   {
-    width: '300px',
+    marginTop: theme.spacing(2),
+    width: '90%',
     alignSelf: 'center'
   },
   root: {
@@ -46,6 +49,11 @@ const SidebarStyle = makeStyles(theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing(3)
+  },
+  textField: {
+    marginTop: theme.spacing(2),
+    width: '90%',
+    alignSelf: 'center'
   }
 }))
 const drawerWidth = 400
@@ -73,6 +81,7 @@ export default function PermanentDrawer () {
   const handleOpen = () => {
     setOpen(true)
   }
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -97,68 +106,95 @@ export default function PermanentDrawer () {
         }}
         anchor='right'>
         <div className={classes.toolbar} >
-          <h2 align='center'> Edycja Drzewa </h2>
+          <h2 align='center'>Edycja Drzewa</h2>
         </div>
         <Divider />
         <Spacer height='32px' />
 
-        <FormControl className={classes.formControl, 'block-example border border-primary'} width='200px' align='center'>
-          <InputLabel id='open-select-label'>Poziom</InputLabel>
-          <Select
-            labelId='open-select-label'
-            id='open-select'
-            open={open}
-            onClose={handleClose}
-            onOpen={handleOpen}
-            value={ilosc}
-            onChange={handleChange}
-          >
-            <MenuItem value=''><em>None</em></MenuItem>
-            <MenuItem value={10}>Pierwszy</MenuItem>
-            <MenuItem value={20}>Drugi</MenuItem>
-            <MenuItem value={30}>Trzeci</MenuItem>
-            <MenuItem value={40}>...</MenuItem>
-          </Select>
-          <Spacer height='20px' />
-          <TextField id='standard-number' label='Ilość wezłów na poziomie' type='number' className={classes.textField} InputLabelProps={{ shrink: true }} margin='normal' />
-          <TextField id='standard' label='Funkcja zamiany' type='text' className={classes.textField} InputLabelProps={{ shrink: true }} margin='normal' />
-          <Spacer height='60px' />
-          <Container>
-            <Button>Edytuj</Button>
-            <Button>Reset</Button>
-          </Container>
-          <Spacer height='60px' /><h3>
-              Historia Zamiany
-          </h3>
-          <FormGroup aria-label='position' row>
-            <List alignContent='center'>
-              <ListItem>
-                <FormControlLabel value='start' control={<Checkbox color='primary' />}
-                  label='2.3 Poziom 1'
-                  labelPlacement='end'
-                />
-              </ListItem>
-              <ListItem>
-                <FormControlLabel
-                  value='middle'
-                  control={<Checkbox color='primary' />}
-                  label='2.3 Poziom 1'
-                  labelPlacement='end'
-                />
-              </ListItem>
-              <ListItem>
-                <FormControlLabel
-                  value='end'
-                  control={<Checkbox color='primary' />}
-                  label='2.3 Poziom 1'
-                  labelPlacement='end'
-                />
-              </ListItem>
-            </List>
+        <Grid container style={{ paddingLeft: '5%', alignSelf: 'center' }}>
+          <Grid item xs={6}>
+            <FormControl
+              className={classes.formControl}
+              align='center'
+              variant='outlined'>
+              <InputLabel
+                htmlFor='level-select'
+                shrink
+              >
+          Poziom
+              </InputLabel>
+              <Select
+                onChange={() => handleChange('age')}
+                value={3}
+                labelWidth={56}
+                inputProps={{
+                  name: 'level-select',
+                  id: 'level-select'
+                }}
+              >
+                { [1, 2, 3, 4, 5, 6].map((level) => <MenuItem key={level} value={level} style={{ textAlign: 'left' }}>{level}</MenuItem>) }
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              id='standard-number'
+              label='Ilość wezłów'
+              disabled
+              className={classes.textField}
+              InputLabelProps={{ shrink: true }}
+              margin='normal'
+              variant='outlined'
+            />
+          </Grid>
+        </Grid>
 
-          </FormGroup>
-          <Button>Reset</Button>
-        </FormControl>
+        <TextField
+          id='standard'
+          label='Funkcja zamiany'
+          type='text'
+          className={classes.textField}
+          InputLabelProps={{ shrink: true }}
+          margin='normal'
+          variant='outlined'
+        />
+        <Spacer height='60px' />
+        <Container>
+          <Button>Edytuj</Button>
+          <Button>Wyczyść</Button>
+        </Container>
+        <Spacer height='60px' />
+        <h3 style={{ marginLeft: '5%' }}>
+          Historia zamiany
+        </h3>
+        <FormGroup aria-label='position' row>
+          <List>
+            <ListItem>
+              <FormControlLabel value='start' control={<Checkbox />}
+                label='2.3 Poziom 1'
+                labelPlacement='end'
+              />
+            </ListItem>
+            <ListItem>
+              <FormControlLabel
+                value='middle'
+                control={<Checkbox />}
+                label='2.3 Poziom 1'
+                labelPlacement='end'
+              />
+            </ListItem>
+            <ListItem>
+              <FormControlLabel
+                value='end'
+                control={<Checkbox />}
+                label='2.3 Poziom 1'
+                labelPlacement='end'
+              />
+            </ListItem>
+          </List>
+
+        </FormGroup>
+        <Button>Wyczyść</Button>
       </Drawer>
     </div>
   )
