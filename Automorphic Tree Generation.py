@@ -7,14 +7,14 @@ def totalNodes(n, p):
     sum=0
     for i in range(0, n):
         sum+=nodesOnLvl(i, p)
-        #print("(p={})^(i={})={}".format(p, i, p**i))
-        #print(sum)
+        # print("(p={})^(i={})={}".format(p, i, p**i))
+        # print(sum)
     return (sum)
 
 
 
-#print(nodesOnLvl(3,4))
-
+# print(nodesOnLvl(3,4))
+# print(totalNodes(3, 4))
 
 def generateTree(n, p):
     arr=[]
@@ -76,33 +76,33 @@ def generateTree(n, p):
         #print("TREE",tree)
         temp=[]
     #print("temp:",temp)
-    
+
 
 
     #loop goes 16 times in 4x4 example
     #for i in range(0, len(tree), 2):
      #       temp.append(tree[i])
       #      temp.append(tree[i+1])
-    
-    
-    
+
+
+
 
     return tree
 
 
 
 #3 lvls, 4 vertices for each node
-tree =  generateTree(4,2)
-print('\n\n', tree, len(tree))
+# tree =  generateTree(4,2)
+# print('\n\n', tree, len(tree))
 
 tree =  generateTree(2,4)
 print('\n\n', tree, len(tree))
+#
+# tree2= generateTree(3,15)
+# print('\n\n', tree2, len(tree))
 
-tree2= generateTree(3,15)
-print('\n\n', tree2, len(tree))
-
-tree3=generateTree(10,5)
-print('\n\n', tree3, len(tree))
+# tree3=generateTree(10,5)
+# print('\n\n', tree3, len(tree))
 # ^ raczej próba wydajności niż faktyczne sprawdzenie
 
 
