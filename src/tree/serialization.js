@@ -1,22 +1,18 @@
 export function treeToText(array)
 {
-  var tJSON = {
-    jsTree: Array,
-    jsonTree: JSON
+  const tJSON = {
+    jsTree: ["tree", array],
+    jsonTree: JSON.stringify(["tree", array])
   }
 
-  tJSON.jsTree = ["tree", array]
-  tJSON.jsonTree = JSON.stringify(tJSON.jsTree)
   return tJSON
 }
 
 export function textToTree(string)
 {
-  var tJSON = {
-    jsTree: Array,
-    jsonTree: JSON
+  const tJSON = {
+    jsTree: string,
+    jsonTree: JSON.parse(string)
   }
-  tJSON.jsonTree = string
-  tJSON.jsTree = JSON.parse(string)
   return tJSON
 }
