@@ -1,5 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { connect } from 'react-redux'
+import { FunctionSelectionState, NO_FUNCTION_SELECTED } from './reducers/appReducer'
 import Drawer from '@material-ui/core/Drawer'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import AppBar from '@material-ui/core/AppBar'
@@ -9,16 +11,13 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
+import Fab from '@material-ui/core/Fab'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
-import Checkbox from '@material-ui/core/Checkbox'
-import FormGroup from '@material-ui/core/FormGroup'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
 import ListItem from '@material-ui/core/ListItem'
-import Container from '@material-ui/core/Container'
 
 const Spacer = require('react-spacer')
 const SidebarStyle = makeStyles(theme => ({
@@ -52,9 +51,22 @@ const SidebarStyle = makeStyles(theme => ({
     marginTop: theme.spacing(2),
     width: '90%',
     alignSelf: 'center'
+  },
+  separatorRight: {
+    borderRight: '1px solid #eee'
+  },
+  fab: {
+    margin: theme.spacing(1.5),
+    marginBottom: theme.spacing(2)
+  },
+  button: {
+    margin: theme.spacing(2)
+  },
+  mainButton: {
+    margin: `${theme.spacing(1)}px 5%`,
   }
 }))
-const drawerWidth = 400
+const drawerWidth = 650
 
 export function ControlledOpenSelect () {
   const classes = SidebarStyle()
@@ -64,17 +76,14 @@ export function ControlledOpenSelect () {
   )
 }
 
-export default function PermanentDrawer () {
-  const [ilosc, wezlyUpdate] = React.useState('')
+function AppContainer (props) {
+  const { functions, currentFunction, currentFunctionIndex } = props
   const classes = SidebarStyle()
-  const handleChange = event => {
-    wezlyUpdate(event.target.value)
-  }
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position='fixed' className={classes.appBar}>
+      <AppBar position='fixed' className={classes.appBar} elevation={0}>
         <Toolbar>
           <Button color='inherit' style={{ alignSelf: 'right' }}>Otwórz</Button>
           <Button color='inherit' style={{ alignSelf: 'right' }}>Zapisz</Button>
@@ -95,7 +104,7 @@ export default function PermanentDrawer () {
         }}
         anchor='right'>
         <div className={classes.toolbar} >
-          <h2 align='center'>Edycja Drzewa</h2>
+          <h2 align='center'>Edycja drzewa</h2>
         </div>
         <Divider />
         <Spacer height='32px' />
@@ -113,7 +122,7 @@ export default function PermanentDrawer () {
           Poziom
               </InputLabel>
               <Select
-                onChange={() => handleChange('age')}
+                onChange={() => {}}
                 value={3}
                 labelWidth={56}
                 inputProps={{
@@ -137,54 +146,75 @@ export default function PermanentDrawer () {
             />
           </Grid>
         </Grid>
-
-        <TextField
-          id='standard'
-          label='Funkcja zamiany'
-          type='text'
-          className={classes.textField}
-          InputLabelProps={{ shrink: true }}
-          margin='normal'
-          variant='outlined'
-        />
-        <Spacer height='60px' />
-        <Container>
-          <Button>Edytuj</Button>
-          <Button>Wyczyść</Button>
-        </Container>
-        <Spacer height='60px' />
-        <h3 style={{ marginLeft: '5%' }}>
-          Historia zamiany
-        </h3>
-        <FormGroup aria-label='position' row>
-          <List>
-            <ListItem>
-              <FormControlLabel value='start' control={<Checkbox />}
-                label='2.3 Poziom 1'
-                labelPlacement='end'
-              />
-            </ListItem>
-            <ListItem>
-              <FormControlLabel
-                value='middle'
-                control={<Checkbox />}
-                label='2.3 Poziom 1'
-                labelPlacement='end'
-              />
-            </ListItem>
-            <ListItem>
-              <FormControlLabel
-                value='end'
-                control={<Checkbox />}
-                label='2.3 Poziom 1'
-                labelPlacement='end'
-              />
-            </ListItem>
-          </List>
-
-        </FormGroup>
-        <Button>Wyczyść</Button>
+        <Button 
+          variant='contained'
+          color='secondary' 
+          className={classes.mainButton}>
+            Zastosuj
+        </Button>
+        <Grid container item xs={12}>
+          <Grid item xs={6} className={classes.separatorRight}>
+            <h3 style={{ marginLeft: '5%' }}>
+              Składniki funkcji
+            </h3>
+            <List style={{width: '100%'}}>
+              {
+                !!currentFunctionIndex && (
+                  <Typography align='center' variant='body2'>No level functions found</Typography>
+                )
+              }
+              {
+                currentFunction && Object.keys(currentFunction.levels).map((key) => (
+                  <ListItem key={`func-${key}`} >
+                    <TextField style={{width: '100%'}} label={`Poziom ${key}`} variant="outlined" />
+                  </ListItem>
+                ))
+              }
+            </List>
+            <Button variant='contained' className={classes.button} disabled={currentFunctionIndex === NO_FUNCTION_SELECTED}>
+              Zastosuj
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            <h3 style={{ marginLeft: '5%' }}>
+              Funkcje do złożenia
+            </h3>
+            <div>
+              {
+                functions.map((fun, index) => (
+                  <Fab
+                    variant='round'
+                    color={fun.selectionState === FunctionSelectionState.ENABLED ? 'secondary' : 'default'}
+                    className={classes.fab}
+                    size={index === currentFunctionIndex ? 'medium' : 'small'}
+                    key={`fab-func-${index}`}>
+                    {fun.label}
+                  </Fab>
+                ))
+              }
+            </div>
+            <Button
+              className={classes.button}
+              variant='contained'>
+                Złóż funkcje
+            </Button>
+          </Grid>
+        </Grid>
       </Drawer>
     </div>
   )
 }
+
+const mapStateToProps = (state) => {
+  const currentFunction = state.functions[state.currentFunctionIndex] || null;
+  return {
+    functions: state.functions,
+    currentFunctionIndex: state.currentFunctionIndex,
+    currentFunction,
+  }
+}
+
+const AppContainerWithState = connect(
+  mapStateToProps
+)(AppContainer)
+export default AppContainerWithState
