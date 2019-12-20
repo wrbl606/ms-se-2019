@@ -1,5 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { connect } from 'react-redux'
+import { FunctionSelectionState, NO_FUNCTION_SELECTED } from './reducers/appReducer'
 import Drawer from '@material-ui/core/Drawer'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import AppBar from '@material-ui/core/AppBar'
@@ -74,17 +76,14 @@ export function ControlledOpenSelect () {
   )
 }
 
-export default function PermanentDrawer () {
-  const [ilosc, wezlyUpdate] = React.useState('')
+function AppContainer (props) {
+  const { functions, currentFunction, currentFunctionIndex } = props
   const classes = SidebarStyle()
-  const handleChange = event => {
-    wezlyUpdate(event.target.value)
-  }
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position='fixed' className={classes.appBar}>
+      <AppBar position='fixed' className={classes.appBar} elevation={0}>
         <Toolbar>
           <Button color='inherit' style={{ alignSelf: 'right' }}>Otwórz</Button>
           <Button color='inherit' style={{ alignSelf: 'right' }}>Zapisz</Button>
@@ -123,7 +122,7 @@ export default function PermanentDrawer () {
           Poziom
               </InputLabel>
               <Select
-                onChange={() => handleChange('age')}
+                onChange={() => {}}
                 value={3}
                 labelWidth={56}
                 inputProps={{
@@ -160,14 +159,19 @@ export default function PermanentDrawer () {
             </h3>
             <List style={{width: '100%'}}>
               {
-                [1,2,3,4].map((i) => (
-                  <ListItem key={`func-${i}`} >
-                    <TextField style={{width: '100%'}} label={`Poziom ${i}`} variant="outlined" />
+                !!currentFunctionIndex && (
+                  <Typography align='center' variant='body2'>No level functions found</Typography>
+                )
+              }
+              {
+                currentFunction && Object.keys(currentFunction.levels).map((key) => (
+                  <ListItem key={`func-${key}`} >
+                    <TextField style={{width: '100%'}} label={`Poziom ${key}`} variant="outlined" />
                   </ListItem>
                 ))
               }
             </List>
-            <Button variant='contained' className={classes.button}>
+            <Button variant='contained' className={classes.button} disabled={currentFunctionIndex === NO_FUNCTION_SELECTED}>
               Zastosuj
             </Button>
           </Grid>
@@ -177,13 +181,14 @@ export default function PermanentDrawer () {
             </h3>
             <div>
               {
-                [1,2,3].map((i) => (
+                functions.map((fun, index) => (
                   <Fab
                     variant='round'
-                    color={i % 2 === 0 ? 'secondary' : 'default'}
+                    color={fun.selectionState === FunctionSelectionState.ENABLED ? 'secondary' : 'default'}
                     className={classes.fab}
-                    key={`fab-func-${i}`}>
-                    {i}
+                    size={index === currentFunctionIndex ? 'medium' : 'small'}
+                    key={`fab-func-${index}`}>
+                    {fun.label}
                   </Fab>
                 ))
               }
@@ -199,3 +204,17 @@ export default function PermanentDrawer () {
     </div>
   )
 }
+
+const mapStateToProps = (state) => {
+  const currentFunction = state.functions[state.currentFunctionIndex] || null;
+  return {
+    functions: state.functions,
+    currentFunctionIndex: state.currentFunctionIndex,
+    currentFunction,
+  }
+}
+
+const AppContainerWithState = connect(
+  mapStateToProps
+)(AppContainer)
+export default AppContainerWithState

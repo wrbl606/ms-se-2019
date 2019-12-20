@@ -1,9 +1,37 @@
 export const Actions = {
-  EXAMPLE_ACTION: 'EXAMPLE_ACTION'
+  SET_TREE: 'SET_TREE',
+  SET_FUNCTIONS: 'SET_FUNCTIONS',
+  UPDATE_FUNCTION: 'UPDATE_FUNCTION',
+  ADD_FUNCTION: 'ADD_FUNCTION',
 }
+export const FunctionSelectionState = {
+  ENABLED: 'ENABLED',
+  DISABLED: 'DISABLED',
+  MARKED: 'MARKED',
+}
+export const NO_FUNCTION_SELECTED = -100;
 const appState = {
-  iloscWezlow: 0
-}
+  tree: [2,[1,2]],
+  functions: [
+    {
+      label: '1',
+      levels: {
+        0: [1,2,3],
+        1: [3,2,1]
+      },
+      selectionState: FunctionSelectionState.ENABLED,
+    },
+    {
+      label: '2',
+      levels: {
+        0: [1,2,3],
+        1: [3,2,1]
+      },
+      selectionState: FunctionSelectionState.DISABLED,
+    },
+  ],
+  currentFunctionIndex: NO_FUNCTION_SELECTED,
+};
 
 /**
  * This is a reducer, a pure function with (state, action) => state signature.
