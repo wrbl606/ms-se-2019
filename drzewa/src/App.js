@@ -88,25 +88,6 @@ function onDownload(jsonData){
  download(JSON.stringify(jsonData), "placeholder.json", "text/json");
 }
 
-function load(i){
-  var files = i;
-  console.log(files);
-  if (files.length <= 0) {
-    return false;
-  }
-  
-  var fr = new FileReader();
-  
-  fr.onload = function(e) { 
-  console.log(e);
-    var result = JSON.parse(e.target.result);
-    var formatted = JSON.stringify(result, null, 2);
-    document.getElementById('result').value = formatted;
-  }
-    
-  fr.readAsText(files.item(0));
-};
-
 function onUpload(){
   const inp = document.createElement("INPUT");
   inp.type = "file";
