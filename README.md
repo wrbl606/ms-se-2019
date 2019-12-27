@@ -32,7 +32,9 @@ Przetestować używając komend:
 1. `npm run dev` - automatycznie buduje i wykonuje aplikację po wykryciu zmian w kodzie (zmiany wyszukiwane są tylko w folderze src/)
 
 **Pracujesz nad stroną internetową?**:
-1. `npm run dev-server` - automatycznie buduje i wykonuje aplikację w przeglądarce po wykryciu zmian w kodzie (zmiany wyszukiwane są tylko w folderze src/)
+1. `cd drzewa`
+1. `npm i`
+1. `npm start` - automatycznie buduje i wykonuje aplikację w przeglądarce po wykryciu zmian w kodzie (zmiany wyszukiwane są tylko w folderze src/)
 
 ## Zarządzanie projektem
 https://trello.com/b/dpu2DmbG/projekt
