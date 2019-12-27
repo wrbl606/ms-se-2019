@@ -78,17 +78,34 @@ function openJSON() {
   console.log("otwieranie!");
 
 }
+                    
 
-function saveJSON() {
-  var obj = {
-    a: 123,
-    b: "4 5 6"
-  };
-  var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
+/*function download(file, obj) {
+  // invisible element
+  var element = document.createElement('a'); 
+  element.setAttribute('href', 'text/json;charset=utf-8, ' + encodeURIComponent(JSON.stringify(obj)));
+  element.setAttribute('download', file); 
+  //the above code is equivalent to 
+  // <a href="path of file" download="file name"> 
+  
+  document.body.appendChild(element);
+  
+  //onClick property 
+  element.click(); 
+  
+  document.body.removeChild(element); 
+}*/
 
-  //$('<a href="data:' + data + '" download="data.json">download JSON</a>').appendTo('#container');
-  console.log("zapisywanie!");
+function download(content, fileName, contentType) {
+ const a = document.createElement("a");
+ const file = new Blob([content], { type: contentType });
+ a.href = URL.createObjectURL(file);
+ a.download = fileName;
+ a.click();
+}
 
+function onDownload(jsonData){
+ download(JSON.stringify(jsonData), "yourfile.json", "text/json");
 }
 
 export function ControlledOpenSelect() {
@@ -135,10 +152,19 @@ function AppContainer(props) {
           alignSelf: 'right'
         }
       } > Otwórz < /Button> <
+      
       Button color = 'inherit'
       onClick = {
-        saveJSON
+        function (){
+        // Generate download of tree.json file with some content 
+        //This obj is just a placeholder as we do not have server side connected to front yet.
+        /*
+        var filename = "tree.json"; 
+        download(filename, obj); 
+        }*/
+        onDownload({a: 123, b: "4 5 6"})
       }
+    }
       style = {
         {
           alignSelf: 'right'
