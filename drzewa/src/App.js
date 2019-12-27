@@ -74,10 +74,7 @@ const SidebarStyle = makeStyles(theme => ({
 }))
 const drawerWidth = 650
 
-function openJSON() {
-  console.log("otwieranie!");
 
-}
 
 function download(content, fileName, contentType) {
  const a = document.createElement("a");
@@ -90,6 +87,64 @@ function download(content, fileName, contentType) {
 function onDownload(jsonData){
  download(JSON.stringify(jsonData), "placeholder.json", "text/json");
 }
+
+function load(i){
+  var files = i;
+  console.log(files);
+  if (files.length <= 0) {
+    return false;
+  }
+  
+  var fr = new FileReader();
+  
+  fr.onload = function(e) { 
+  console.log(e);
+    var result = JSON.parse(e.target.result);
+    var formatted = JSON.stringify(result, null, 2);
+    document.getElementById('result').value = formatted;
+  }
+    
+  fr.readAsText(files.item(0));
+};
+
+function onUpload(){
+  const inp = document.createElement("INPUT");
+  inp.type = "file";
+  inp.id = "selectFiles";
+  inp.innerHTML = "Import";
+  document.body.appendChild(inp);
+  document.body.appendChild(document.createElement("BR"));
+
+  const but = document.createElement("BUTTON");
+  but.id = "import";
+  but.innerHTML = "Import";
+  document.body.appendChild(but);
+  document.body.appendChild(document.createElement("BR"));
+
+  const ta = document.createElement("TEXTAREA");
+  ta.id = "result";
+  document.body.appendChild(ta);
+  document.body.appendChild(document.createElement("BR"));
+
+  but.onclick = function() {
+    var files = document.getElementById('selectFiles').files;
+    console.log(files);
+    if (files.length <= 0) {
+      return false;
+    }
+    
+    var fr = new FileReader();
+    
+    fr.onload = function(e) { 
+    console.log(e);
+      var result = JSON.parse(e.target.result);
+      var formatted = JSON.stringify(result, null, 2);
+      document.getElementById('result').value = formatted;
+    }
+    
+    fr.readAsText(files.item(0));
+  };
+};
 
 export function ControlledOpenSelect() {
   const classes = SidebarStyle()
@@ -128,7 +183,9 @@ function AppContainer(props) {
       <
       Button color = 'inherit'
       onClick = {
-        openJSON
+        function (){
+          onUpload({a: 123, b: "4 5 6"})
+      }
       }
       style = {
         {
@@ -159,7 +216,7 @@ function AppContainer(props) {
         classes.toolbar
       }
       /> <
-      Typography paragraph >
+      Typography paragraph id = "drzewo">
       Tu będzie drzewo!!!!
       <
       /Typography> < /
