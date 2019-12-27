@@ -127,7 +127,7 @@ function onUpload(){
   document.body.appendChild(document.createElement("BR"));
 
   but.onclick = function() {
-    var files = document.getElementById('selectFiles').files;
+    var files = inp.files;
     console.log(files);
     if (files.length <= 0) {
       return false;
@@ -139,7 +139,7 @@ function onUpload(){
     console.log(e);
       var result = JSON.parse(e.target.result);
       var formatted = JSON.stringify(result, null, 2);
-      document.getElementById('result').value = formatted;
+      ta.value = formatted;
     }
     
     fr.readAsText(files.item(0));
