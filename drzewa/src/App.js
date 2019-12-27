@@ -78,23 +78,6 @@ function openJSON() {
   console.log("otwieranie!");
 
 }
-                    
-
-/*function download(file, obj) {
-  // invisible element
-  var element = document.createElement('a'); 
-  element.setAttribute('href', 'text/json;charset=utf-8, ' + encodeURIComponent(JSON.stringify(obj)));
-  element.setAttribute('download', file); 
-  //the above code is equivalent to 
-  // <a href="path of file" download="file name"> 
-  
-  document.body.appendChild(element);
-  
-  //onClick property 
-  element.click(); 
-  
-  document.body.removeChild(element); 
-}*/
 
 function download(content, fileName, contentType) {
  const a = document.createElement("a");
@@ -105,7 +88,7 @@ function download(content, fileName, contentType) {
 }
 
 function onDownload(jsonData){
- download(JSON.stringify(jsonData), "yourfile.json", "text/json");
+ download(JSON.stringify(jsonData), "placeholder.json", "text/json");
 }
 
 export function ControlledOpenSelect() {
@@ -156,13 +139,7 @@ function AppContainer(props) {
       Button color = 'inherit'
       onClick = {
         function (){
-        // Generate download of tree.json file with some content 
-        //This obj is just a placeholder as we do not have server side connected to front yet.
-        /*
-        var filename = "tree.json"; 
-        download(filename, obj); 
-        }*/
-        onDownload({a: 123, b: "4 5 6"})
+          onDownload({a: 123, b: "4 5 6"})
       }
     }
       style = {
