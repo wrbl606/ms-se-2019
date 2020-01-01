@@ -18,6 +18,7 @@ import {
   NO_FUNCTION_SELECTED
 } from '../reducers/appReducer'
 import { makeStyles } from '@material-ui/core';
+import { changeFunctionState, setCurrentFunctionIndex, setLevelSelectValue, addLevelToFunction, createNewFunctionWithLevel } from '../actions/appActions';
 const Spacer = require('react-spacer')
 
 const useStyles = makeStyles(theme => ({
@@ -68,8 +69,67 @@ function SideBar(props) {
   const {
     functions,
     currentFunction,
-    currentFunctionIndex
+    currentFunctionIndex,
+    levelsCount,
+    verticesCount,
+    levelSelectValue,
+    onFunctionSelectionStateChange,
+    onMarkFunctionAsCurrent,
+    onLevelSelectValueChange,
+    onAddLevelToFunction,
+    onAddFunctionWithLevel,
   } = props
+
+  function determineButtonColor(selectionState = FunctionSelectionState.DISABLED) {
+    switch(selectionState) {
+      case FunctionSelectionState.ENABLED: return 'secondary';
+      case FunctionSelectionState.MARKED: return 'primary';
+      default: return 'default';
+    }
+  }
+
+  function changeFunctionState(fun, funIndex) {
+    const isSelected = currentFunctionIndex === funIndex;
+
+    if (!isSelected) {
+      onMarkFunctionAsCurrent(funIndex);
+      return;
+    }
+
+    const currentFunctionState = fun.selectionState;
+    const stateCycle = [FunctionSelectionState.DISABLED, FunctionSelectionState.ENABLED, FunctionSelectionState.MARKED];
+    const nextFunctionState = stateCycle[(stateCycle.findIndex((state) => state === currentFunctionState) + 1) % (stateCycle.length)]
+    onFunctionSelectionStateChange(fun, funIndex, nextFunctionState);
+  }
+
+  function determineAllowedLevelsToAdd() {
+    const allAvailableLevels = new Array(levelsCount).fill(0).map((_, index) => index.toString());
+    allAvailableLevels.shift();
+    const currentlyUsedLevels = currentFunction ? Object.keys(currentFunction.levels).map((l) => l.toString()) : [];
+    const allowedLevels = [];
+    for (const level in allAvailableLevels) {
+      if (!currentlyUsedLevels.includes(level)) {
+        allowedLevels.push(level);
+      }
+    }
+
+    return allowedLevels;
+  }
+
+  function nodesCountOnLevel(levels, vertices) {
+    const nodes = Math.pow(vertices, levels);
+    return Number.isNaN(nodes) ? 0 : nodes;
+  }
+
+  function handleAddLevelToFunction() {
+    if (!currentFunction) {
+      const functionsCount = functions.length;
+      onAddFunctionWithLevel(levelSelectValue, []);
+      onMarkFunctionAsCurrent(functionsCount);
+      return;
+    }
+    onAddLevelToFunction(currentFunction, currentFunctionIndex, levelSelectValue);
+  }
 
   return (
     <Drawer className={classes.drawer}
@@ -97,8 +157,10 @@ function SideBar(props) {
           shrink>
           Poziom 
           </InputLabel> 
-          <Select onChange={() => {}}
-            value={3}
+          <Select 
+            onChange={(event) => onLevelSelectValueChange(event.target.value)}
+            value={levelSelectValue}
+            disabled={determineAllowedLevelsToAdd().length === 0}
             labelWidth={56}
             inputProps={
               {
@@ -107,43 +169,43 @@ function SideBar(props) {
               }
             }> 
             {
-            [1, 2, 3, 4, 5, 6].map((level) => <MenuItem key={level}
-              value={
-                level
-              }
-              style={
-                {
-                  textAlign: 'left'
-                }
-              }> 
-              { level } 
-              </MenuItem>)} 
+            determineAllowedLevelsToAdd().map((level) => (
+                <MenuItem key={level}
+                  value={level}
+                  style={{textAlign: 'left'}}> 
+                    { level } 
+                </MenuItem>
+              )
+            )} 
             </Select> 
           </FormControl> 
         </Grid> 
         <Grid item xs={
           6
         }>
-        <TextField id='standard-number'
-        label='Ilość wezłów'
-        disabled className={
-          classes.textField
-        }
-        InputLabelProps={
-          {
-            shrink: true
+          <TextField id='standard-number'
+          label='Ilość wezłów'
+          disabled className={
+            classes.textField
           }
-        }
-        margin='normal'
-        variant='outlined'/>
+          InputLabelProps={
+            {
+              shrink: true
+            }
+          }
+          margin='normal'
+          variant='outlined'
+          value={`${nodesCountOnLevel(parseInt(levelSelectValue, 10), verticesCount)}`} />
         </Grid> 
       </Grid> 
       <Button variant='contained'
       color='secondary'
+      onClick={handleAddLevelToFunction}
+      disabled={determineAllowedLevelsToAdd().length === 0}
       className={
         classes.mainButton
       }>
-        Zastosuj 
+        Dodaj 
       </Button> 
       <Grid container item xs={
         12
@@ -165,41 +227,42 @@ function SideBar(props) {
           {
             width: '100%'
           }
-        }> 
+        }>
         {
-          !!currentFunctionIndex && ( 
+          currentFunctionIndex === NO_FUNCTION_SELECTED && ( 
             <Typography 
             align='center'
             variant='body2'> 
-              No level functions found 
+              Nie wybrano żadnej funkcji
             </Typography>
           )
-        } {
+        }
+        {
+          currentFunction && Object.keys(currentFunction.levels) === 0 && (
+            <Typography 
+            align='center'
+            variant='body2'>
+              Wybrana funkcja nie posiada przekształceń.
+            </Typography>
+          )
+        }
+        {
           currentFunction && Object.keys(currentFunction.levels).map((key) => ( 
             <ListItem key={
-              `func-${key}`
+              `func-${currentFunction.label}-${key}`
             }>
-            <TextField style={
-              {
-                width: '100%'
-              }
-            }
-            label={
-              `Poziom ${key}`
-            }
-            variant="outlined"/>
+              <TextField style={{width: '100%'}}
+              label={`Poziom ${key}`}
+              variant="outlined"
+              value={currentFunction.levels[key]} />
             </ListItem>
           ))
         } 
         </List> 
         <Button variant='contained'
-        className={
-          classes.button
-        }
-        disabled={
-          currentFunctionIndex === NO_FUNCTION_SELECTED
-        }>
-        Zastosuj 
+        className={classes.button}
+        disabled={currentFunctionIndex === NO_FUNCTION_SELECTED}>
+          Zastosuj
         </Button> 
       </Grid> 
         <Grid item xs={
@@ -210,34 +273,34 @@ function SideBar(props) {
             marginLeft: '5%'
           }
         }>
-        Funkcje do złożenia 
+          Funkcje do złożenia 
         </h3> 
-        <div> {
-          functions.map((fun, index) => ( 
-            <Fab variant='round'
-            color={
-              fun.selectionState === FunctionSelectionState.ENABLED ? 'secondary' : 'default'
-            }
-            className={
-              classes.fab
-            }
-            size={
-              index === currentFunctionIndex ? 'medium' : 'small'
-            }
-            key={
-              `fab-func-${index}`
-            }> {
-              fun.label
-            } 
+        <div> 
+          {
+            functions.map((fun, index) => ( 
+              <Fab variant='round'
+                color={determineButtonColor(fun.selectionState)}
+                onClick={() => changeFunctionState(fun, index)}
+                className={classes.fab}
+                size={index === currentFunctionIndex ? 'medium' : 'small'}
+                key={`fab-func-${index}`}> 
+                { fun.label }
+              </Fab>
+            ))
+          }
+          <Fab variant='round'
+            color='default'
+            onClick={() => onMarkFunctionAsCurrent(NO_FUNCTION_SELECTED)}
+            className={classes.fab}
+            size={'small'}
+            key={`fab-func-new`}> 
+            +
           </Fab>
-          ))
-        } 
         </div> 
-        <Button className={
-          classes.button
-        }
+        <Button className={classes.button}
+        disabled={functions.filter((f) => f.selectionState === FunctionSelectionState.MARKED).length < 2}
         variant='contained'>
-        Złóż funkcje 
+          Złóż funkcje 
         </Button> 
         </Grid> 
       </Grid> 
@@ -251,10 +314,34 @@ const mapStateToProps = (state) => {
     functions: state.functions,
     currentFunctionIndex: state.currentFunctionIndex,
     currentFunction,
+    levelsCount: state.levelsCount,
+    verticesCount: state.verticesCount,
+    levelSelectValue: state.levelSelectValue,
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onFunctionSelectionStateChange: (fun, functionIndex, newState) => {
+      dispatch(changeFunctionState(fun, functionIndex, newState));
+    },
+    onMarkFunctionAsCurrent: (functionIndex) => {
+      dispatch(setCurrentFunctionIndex(functionIndex));
+    },
+    onLevelSelectValueChange: (newSelectValue) => {
+      dispatch(setLevelSelectValue(newSelectValue));
+    },
+    onAddLevelToFunction: (fun, functionIndex, levelIndex) => {
+      dispatch(addLevelToFunction(fun, functionIndex, levelIndex));
+    },
+    onAddFunctionWithLevel: (levelIndex, levelValue) => {
+      dispatch(createNewFunctionWithLevel(levelIndex, levelValue));
+    }
+  };
+}
+
 const SidebarWithState = connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps,
 )(SideBar)
 export default SidebarWithState
