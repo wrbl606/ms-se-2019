@@ -1,0 +1,7 @@
+{
+  "files.autoSave": "onWindowChange",
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "javascript.format.enable": false
+}
