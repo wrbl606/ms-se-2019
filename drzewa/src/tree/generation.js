@@ -4,8 +4,7 @@
  * @returns {Number} Nodes on level
  */
 export function nodesOnLvl (n, p) {
-  const nodes = Math.pow(n, p);
-  return Number.isNaN(nodes) ? 0 : nodes;
+  return Math.pow(p, n)
 }
 
 /**

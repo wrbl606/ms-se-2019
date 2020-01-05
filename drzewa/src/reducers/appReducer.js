@@ -12,8 +12,8 @@ export const FunctionSelectionState = {
 export const NO_FUNCTION_SELECTED = -100;
 const appState = {
   tree: [2,[1,2]],
-  levelsCount: 3,
-  verticesCount: 2,
+  levelsCount: 5,
+  verticesCount: 3,
   functions: [
     {
       label: '1',

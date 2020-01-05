@@ -84,7 +84,6 @@ function SideBar(props) {
   } = props
 
   function determineButtonColor(selectionState = 'unknown') {
-    console.log({ selectionState });
     switch(selectionState) {
       case FunctionSelectionState.ENABLED: return 'secondary';
       case FunctionSelectionState.MARKED: return 'primary';
