@@ -18,7 +18,9 @@ import {
   NO_FUNCTION_SELECTED
 } from '../reducers/appReducer'
 import { makeStyles } from '@material-ui/core';
-import { changeFunctionState, setCurrentFunctionIndex, setLevelSelectValue, addLevelToFunction, createNewFunctionWithLevel } from '../actions/appActions';
+import { changeFunctionState, setCurrentFunctionIndex, setLevelSelectValue, addLevelToFunction, createNewFunctionWithLevel, addFunction } from '../actions/appActions';
+import { nodesOnLvl } from '../tree/generation'
+import { reverseFunction, joinManyFunctions } from '../tree/modification'
 const Spacer = require('react-spacer')
 
 const useStyles = makeStyles(theme => ({
@@ -78,9 +80,10 @@ function SideBar(props) {
     onLevelSelectValueChange,
     onAddLevelToFunction,
     onAddFunctionWithLevel,
+    onAddFunction,
   } = props
 
-  function determineButtonColor(selectionState = FunctionSelectionState.DISABLED) {
+  function determineButtonColor(selectionState = 'unknown') {
     switch(selectionState) {
       case FunctionSelectionState.ENABLED: return 'secondary';
       case FunctionSelectionState.MARKED: return 'primary';
@@ -116,11 +119,6 @@ function SideBar(props) {
     return allowedLevels;
   }
 
-  function nodesCountOnLevel(levels, vertices) {
-    const nodes = Math.pow(vertices, levels);
-    return Number.isNaN(nodes) ? 0 : nodes;
-  }
-
   function handleAddLevelToFunction() {
     if (!currentFunction) {
       const functionsCount = functions.length;
@@ -129,6 +127,22 @@ function SideBar(props) {
       return;
     }
     onAddLevelToFunction(currentFunction, currentFunctionIndex, levelSelectValue);
+  }
+
+  function handleAddReversedSelectedFunction() {
+    const functionToAdd = reverseFunction(currentFunction);
+    functionToAdd.label = `${functions.length + 1}`;
+    functionToAdd.selectionState = currentFunction.selectionState;
+    onAddFunction(functionToAdd);
+  }
+
+  function joinMarkedFunctions() {
+    // must find at least two marked functions to work
+    const functionsToJoin = functions.filter((f) => f.selectionState === FunctionSelectionState.MARKED);
+    const joinedFunction = joinManyFunctions(functionsToJoin);
+    joinedFunction.label = `${functions.length + 1}`;
+    joinedFunction.selectionState = FunctionSelectionState.ENABLED;
+    onAddFunction(joinedFunction);
   }
 
   return (
@@ -195,7 +209,7 @@ function SideBar(props) {
           }
           margin='normal'
           variant='outlined'
-          value={`${nodesCountOnLevel(parseInt(levelSelectValue, 10), verticesCount)}`} />
+          value={`${nodesOnLvl(parseInt(levelSelectValue, 10), verticesCount)}`} />
         </Grid> 
       </Grid> 
       <Button variant='contained'
@@ -297,11 +311,20 @@ function SideBar(props) {
             +
           </Fab>
         </div> 
-        <Button className={classes.button}
-        disabled={functions.filter((f) => f.selectionState === FunctionSelectionState.MARKED).length < 2}
-        variant='contained'>
+        <Button 
+          className={classes.button}
+          disabled={functions.filter((f) => f.selectionState === FunctionSelectionState.MARKED).length < 2}
+          onClick={joinMarkedFunctions}
+          variant='contained'>
           Złóż funkcje 
-        </Button> 
+        </Button>
+        <Button
+          className={classes.button}
+          disabled={!currentFunction}
+          onClick={handleAddReversedSelectedFunction}
+          variant='contained'>
+            Odwróć zaznaczoną
+        </Button>
         </Grid> 
       </Grid> 
     </Drawer>
@@ -336,6 +359,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     onAddFunctionWithLevel: (levelIndex, levelValue) => {
       dispatch(createNewFunctionWithLevel(levelIndex, levelValue));
+    },
+    onAddFunction: (fun) => {
+      dispatch(addFunction(fun))
     }
   };
 }
