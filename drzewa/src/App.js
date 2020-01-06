@@ -18,6 +18,7 @@ import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import ListItem from '@material-ui/core/ListItem'
+import Tree from 'react-tree-graph';
 
 const Spacer = require('react-spacer')
 const SidebarStyle = makeStyles(theme => ({
@@ -80,6 +81,90 @@ function AppContainer (props) {
   const { functions, currentFunction, currentFunctionIndex } = props
   const classes = SidebarStyle()
 
+// TREE STUFF
+
+  let data = {
+    name: 'Parent',
+    children: [{
+      name: '0',
+        children: [{
+          name: '00',
+            children: [{
+              name: '000',
+                children: [{
+                  name: '0000'
+                }, {
+                  name: '0001'
+                }]
+            }, {
+              name: '001',
+                children: [{
+                  name: '0010'
+                }, {
+                  name: '0011'
+                }]
+            }]
+        }, {
+          name: '01',
+            children: [{
+              name: '010',
+                children: [{
+                  name: '0100'
+                }, {
+                  name: '0101'
+                }]
+            }, {
+              name: '011',
+                children: [{
+                  name: '0110'
+                }, {
+                  name: '0111'
+                }]
+            }]
+        }]
+    }, {
+      name: '1',
+        children: [{
+          name: '10',
+            children: [{
+              name: '100',
+                children: [{
+                  name: '1000'
+                }, {
+                  name: '1001'
+                }]
+            }, {
+              name: '101',
+                children: [{
+                  name: '1010'
+                }, {
+                  name: '1011'
+                }]
+            }]
+        }, {
+          name: '11',
+            children: [{
+              name: '110',
+                children: [{
+                  name: '1100'
+                }, {
+                  name: '1101'
+                }]
+            }, {
+              name: '111',
+                children: [{
+                  name: '1110'
+                }, {
+                  name: '1111'
+                }]
+            }]
+        }]
+    }]
+  };
+  
+
+// END TREE STUFF
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -94,6 +179,18 @@ function AppContainer (props) {
         <div className={classes.toolbar} />
         <Typography paragraph>
             Tu będzie drzewo!!!!
+
+            <Tree
+            
+            data={data}
+            height={600}
+            width={600}
+            // svgProps={{
+            //   transform: 'rotate(90)'
+            // }}
+
+            />
+
         </Typography>
       </main>
       <Drawer
