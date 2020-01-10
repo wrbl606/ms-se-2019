@@ -5,7 +5,7 @@ import Tree from 'react-tree-graph';
 import 'react-tree-graph/dist/style.css';
 import { generateTree } from '../tree/generation';
 import { FunctionSelectionState } from '../reducers/appReducer';
-import { joinManyFunctions } from '../tree/modification';
+import { joinManyFunctions, treeToGraph } from '../tree/modification';
 
 const useStyles = makeStyles(theme => ({
   toolbar: theme.mixins.toolbar,
@@ -27,38 +27,15 @@ function TreeView(props) {
   function calcData() {
     // create base tree
     const tree = generateTree(levelsCount, verticesCount);
+    console.log(JSON.stringify(tree))
     // join all enabled modification functions to one
     const enabledFunctions = functions.filter((f) => f.selectionState !== FunctionSelectionState.DISABLED);
     const modificationFunction = joinManyFunctions(enabledFunctions);
     // modify tree
     // TODO
     // convert tree to graph data
+    console.log(JSON.stringify(treeToGraph(tree), null, 2));
     return treeToGraph(tree);
-  }
-
-  function treeToGraph(tree = [3, [1, 2]]) {
-    const data = getChildren(tree);
-    return data;
-  }
-
-  function getChildren(tree = [3, [1, 2]]) {
-    const children = [];
-    const name = `${tree[0]}`;
-
-    if (Array.isArray(tree[1][1])) {
-      for (let i = 1; i < tree.length; i++) {
-        children.push(getChildren(tree[i]));
-      }
-    } else {
-      for (let i = 0; i < tree[1].length; i++) {
-        children.push({ name: `${tree[1][i]}` });
-      }
-    }
-
-    return {
-      name,
-      children,
-    };
   }
 
   return (
@@ -69,7 +46,6 @@ function TreeView(props) {
         classes.toolbar
       }/> 
       <Tree 
-        // data={treeToGraph([15,[13,[3,[1,2]],[6,[4,5]]],[14,[9,[7,8]],[12,[10,11]]]])}
         data={calcData()}
         nodeRadius={15}
         nodeOffset={-2}
