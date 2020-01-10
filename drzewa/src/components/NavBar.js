@@ -34,7 +34,7 @@ function NavBar(props) {
   }
 
   function onDownload(){
-    download(JSON.stringify(store), `tree-${new Date().toISOString()}.json`, "text/json");
+    download(JSON.stringify(store), `tree-${new Date().toISOString()}.tree`, "text/json");
   }
 
   function onUpload() {
@@ -42,6 +42,7 @@ function NavBar(props) {
     inp.type = "file";
     inp.id = "selectFiles";
     inp.innerHTML = "Import";
+    inp.accept = ".tree";
     inp.style.display = 'none';
     document.body.appendChild(inp);
     document.body.appendChild(document.createElement("BR"));
