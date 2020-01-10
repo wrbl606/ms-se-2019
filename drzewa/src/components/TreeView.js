@@ -73,8 +73,8 @@ function TreeView(props) {
         data={calcData()}
         nodeRadius={15}
         nodeOffset={-2}
-        width={levelsCount * verticesCount/2 * 100}
-        height={levelsCount/2 * verticesCount * 150}
+        width={levelsCount * 150}
+        height={Math.pow(verticesCount, levelsCount - 1) * 45}
         margins={{
           bottom: 20,
           top: 20,

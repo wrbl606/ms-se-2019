@@ -43,7 +43,7 @@ const appState = {
     },
   ],
   currentFunctionIndex: NO_FUNCTION_SELECTED,
-  levelSelectValue: '0',
+  levelSelectValue: '1',
 };
 
 /**

@@ -82,7 +82,7 @@ function NavBar(props) {
       alert('Niepoprawna liczba rozgałęzień');
       return;
     }
-    const levels = prompt('Liczba poziomów', '3');
+    const levels = parseInt(prompt('Liczba poziomów', '3'));
     if (isNaN(levels)) {
       alert('Niepoprawna liczba poziomów');
       return;

@@ -18,7 +18,7 @@ import {
   NO_FUNCTION_SELECTED
 } from '../reducers/appReducer'
 import { makeStyles } from '@material-ui/core';
-import { changeFunctionState, setCurrentFunctionIndex, setLevelSelectValue, addLevelToFunction, createNewFunctionWithLevel, addFunction } from '../actions/appActions';
+import { changeFunctionState, setCurrentFunctionIndex, setLevelSelectValue, addLevelToFunction, createNewFunctionWithLevel, addFunction, setFunction } from '../actions/appActions';
 import { nodesOnLvl } from '../tree/generation'
 import { reverseFunction, joinManyFunctions } from '../tree/modification'
 const Spacer = require('react-spacer')
@@ -81,6 +81,7 @@ function SideBar(props) {
     onAddLevelToFunction,
     onAddFunctionWithLevel,
     onAddFunction,
+    onUpdateFunction
   } = props
 
   function determineButtonColor(selectionState = 'unknown') {
@@ -110,12 +111,11 @@ function SideBar(props) {
     allAvailableLevels.shift();
     const currentlyUsedLevels = currentFunction ? Object.keys(currentFunction.levels).map((l) => l.toString()) : [];
     const allowedLevels = [];
-    for (const level in allAvailableLevels) {
+    for (const level of allAvailableLevels) {
       if (!currentlyUsedLevels.includes(level)) {
         allowedLevels.push(level);
       }
     }
-
     return allowedLevels;
   }
 
@@ -143,6 +143,17 @@ function SideBar(props) {
     joinedFunction.label = `${functions.length + 1}`;
     joinedFunction.selectionState = FunctionSelectionState.ENABLED;
     onAddFunction(joinedFunction);
+  }
+
+  function onLevelFunctionChanged(level, newText) {
+    const newFunction = {
+      ...currentFunction,
+      levels: {
+        ...currentFunction.levels,
+        [level]: newText.split(',').map((text) => isNaN(parseInt(text)) ? text : parseInt(text)),
+      }
+    };
+    onUpdateFunction(currentFunctionIndex, newFunction);
   }
 
   return (
@@ -269,7 +280,8 @@ function SideBar(props) {
                 style={{width: '100%'}}
                 label={`Poziom ${key}`}
                 variant="outlined"
-                value={currentFunction.levels[key]} />
+                value={currentFunction.levels[key]}
+                onChange={(event) => onLevelFunctionChanged(key, event.target.value)} />
             </ListItem>
           ))
         } 
@@ -363,6 +375,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     onAddFunction: (fun) => {
       dispatch(addFunction(fun))
+    },
+    onUpdateFunction: (funIndex, fun) => {
+      dispatch(setFunction(funIndex, fun));
     }
   };
 }
