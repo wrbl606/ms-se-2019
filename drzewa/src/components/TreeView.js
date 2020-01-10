@@ -73,7 +73,8 @@ function TreeView(props) {
         data={calcData()}
         nodeRadius={15}
         nodeOffset={-2}
-        width={800}
+        width={levelsCount * verticesCount * 100}
+        height={levelsCount * verticesCount * 300}
         margins={{
           bottom: 20,
           top: 20,
@@ -82,8 +83,7 @@ function TreeView(props) {
         }}
         textProps={{
           className: 'graph-text'
-        }}
-        height={1600}/>
+        }}/>
     </main> 
   );
 }

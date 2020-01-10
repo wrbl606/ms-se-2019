@@ -265,10 +265,11 @@ function SideBar(props) {
             <ListItem key={
               `func-${currentFunction.label}-${key}`
             }>
-              <TextField style={{width: '100%'}}
-              label={`Poziom ${key}`}
-              variant="outlined"
-              value={currentFunction.levels[key]} />
+              <TextField 
+                style={{width: '100%'}}
+                label={`Poziom ${key}`}
+                variant="outlined"
+                value={currentFunction.levels[key]} />
             </ListItem>
           ))
         } 

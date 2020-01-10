@@ -1,10 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {
   makeStyles
 } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
+import { setVerticesCount, setLevelsCount } from '../actions/appActions';
 
 const drawerWidth = 650;
 const useStyles = makeStyles({
@@ -14,8 +16,15 @@ const useStyles = makeStyles({
   },
 });
 
-export default function NavBar() {
+function NavBar(props) {
   const classes = useStyles();
+  const {
+    verticesCount,
+    levelsCount,
+    store,
+    onVerticesCount,
+    onLevelsCount
+  } = props;
 
   function download(content, fileName, contentType) {
     const a = document.createElement("a");
@@ -68,6 +77,22 @@ export default function NavBar() {
     };
   }
 
+  function onNew() {
+    const vertices = parseInt(prompt('Liczba rozgałęzień: ', '3'));
+    if (isNaN(vertices)) {
+      alert('Niepoprawna liczba rozgałęzień');
+      return;
+    }
+    const levels = prompt('Liczba poziomów', '3');
+    if (isNaN(levels)) {
+      alert('Niepoprawna liczba poziomów');
+      return;
+    }
+
+    onVerticesCount(vertices);
+    onLevelsCount(levels);
+  }
+
   return (
     <AppBar position = 'fixed'
       className = {
@@ -89,7 +114,7 @@ export default function NavBar() {
           }
         }>
           Otwórz 
-        </Button> 
+        </Button>
         <Button color = 'inherit'
           onClick = {
             function (){
@@ -103,6 +128,42 @@ export default function NavBar() {
         }>
           Zapisz
         </Button>
-      </Toolbar> 
+        <Button 
+          color = 'inherit'
+          onClick = {onNew}
+          style = {
+            {
+              alignSelf: 'right'
+            }
+          }
+        >
+          Nowy
+        </Button>
+      </Toolbar>
     </AppBar>)
 }
+
+const mapStateToProps = (state) => {
+  return {
+    levelsCount: state.levelsCount,
+    verticesCount: state.verticesCount,
+    store: state
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onVerticesCount: (verticesCount) => {
+      dispatch(setVerticesCount(verticesCount));
+    },
+    onLevelsCount: (levelsCount) => {
+      dispatch(setLevelsCount(levelsCount));
+    },
+  };
+}
+
+const NavBarWithState = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(NavBar)
+export default NavBarWithState

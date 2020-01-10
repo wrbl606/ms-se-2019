@@ -8,6 +8,20 @@ export function setTree (tree = []) {
   }
 }
 
+export function setVerticesCount(verticesCount) {
+  return {
+    type: Actions.SET_VERTICES_COUNT,
+    verticesCount
+  }
+}
+
+export function setLevelsCount(levelsCount) {
+  return {
+    type: Actions.SET_LEVELS_COUNT,
+    levelsCount
+  }
+}
+
 export function setFunctions (functions = []) {
   return {
     type: Actions.SET_FUNCTIONS,
@@ -18,6 +32,12 @@ export function setFunctions (functions = []) {
 export function addFunction (fun) {
   const currentFunctions = [...store.getState().functions];
   currentFunctions.push(fun);
+  return setFunctions(currentFunctions);
+}
+
+export function setFunction (funIndex, fun) {
+  const currentFunctions = [...store.getState().functions];
+  currentFunctions[funIndex] = fun;
   return setFunctions(currentFunctions);
 }
 

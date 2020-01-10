@@ -3,6 +3,8 @@ export const Actions = {
   SET_FUNCTIONS: 'SET_FUNCTIONS',
   SET_CURRENT_FUNCTION: 'SET_CURRENT_FUNCTION',
   SET_LEVEL_SELECT_VALUE: 'SET_LEVEL_SELECT_VALUE',
+  SET_VERTICES_COUNT: 'SET_VERTICES_COUNT',
+  SET_LEVELS_COUNT: 'SET_LEVELS_COUNT',
 }
 export const FunctionSelectionState = {
   ENABLED: 'ENABLED',
@@ -72,6 +74,16 @@ export default function appReducer (state = appState, action) {
       return {
         ...state,
         levelSelectValue: action.levelSelectValue
+      };
+    case Actions.SET_VERTICES_COUNT:
+      return {
+        ...state,
+        verticesCount: action.verticesCount
+      };
+    case Actions.SET_LEVELS_COUNT:
+      return {
+        ...state,
+        levelsCount: action.levelsCount
       };
     default:
       return state
