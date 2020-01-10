@@ -1,4 +1,5 @@
 export const Actions = {
+  SET_STORE: 'SET_STORE',
   SET_TREE: 'SET_TREE',
   SET_FUNCTIONS: 'SET_FUNCTIONS',
   SET_CURRENT_FUNCTION: 'SET_CURRENT_FUNCTION',
@@ -14,7 +15,7 @@ export const FunctionSelectionState = {
 export const NO_FUNCTION_SELECTED = -100;
 const appState = {
   tree: [2,[1,2]],
-  levelsCount: 5,
+  levelsCount: 3,
   verticesCount: 3,
   functions: [
     {
@@ -84,7 +85,11 @@ export default function appReducer (state = appState, action) {
       return {
         ...state,
         levelsCount: action.levelsCount
-      };
+      };  
+    case Actions.SET_STORE:
+      return {
+        ...action.store
+      }
     default:
       return state
   }

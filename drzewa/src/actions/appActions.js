@@ -1,6 +1,13 @@
 import { Actions, NO_FUNCTION_SELECTED, FunctionSelectionState } from '../reducers/appReducer'
 import store from '../store';
 
+export function setStore (store = {}) {
+  return {
+    type: Actions.SET_STORE,
+    store
+  }
+}
+
 export function setTree (tree = []) {
   return {
     type: Actions.SET_TREE,

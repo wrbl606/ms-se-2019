@@ -6,7 +6,7 @@ import {
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
-import { setVerticesCount, setLevelsCount } from '../actions/appActions';
+import { setVerticesCount, setLevelsCount, setStore } from '../actions/appActions';
 
 const drawerWidth = 650;
 const useStyles = makeStyles({
@@ -19,11 +19,10 @@ const useStyles = makeStyles({
 function NavBar(props) {
   const classes = useStyles();
   const {
-    verticesCount,
-    levelsCount,
     store,
     onVerticesCount,
-    onLevelsCount
+    onLevelsCount,
+    onNewStore
   } = props;
 
   function download(content, fileName, contentType) {
@@ -32,10 +31,10 @@ function NavBar(props) {
     a.href = URL.createObjectURL(file);
     a.download = fileName;
     a.click();
-    }
+  }
 
-  function onDownload(jsonData){
-    download(JSON.stringify(jsonData), "placeholder.json", "text/json");
+  function onDownload(){
+    download(JSON.stringify(store), `tree-${new Date().toISOString()}.json`, "text/json");
   }
 
   function onUpload() {
@@ -43,38 +42,37 @@ function NavBar(props) {
     inp.type = "file";
     inp.id = "selectFiles";
     inp.innerHTML = "Import";
+    inp.style.display = 'none';
     document.body.appendChild(inp);
     document.body.appendChild(document.createElement("BR"));
 
-    const but = document.createElement("BUTTON");
-    but.id = "import";
-    but.innerHTML = "Import";
-    document.body.appendChild(but);
-    document.body.appendChild(document.createElement("BR"));
+    inp.click();
+    inp.onchange = () => {
+      const but = document.createElement("BUTTON");
+      but.id = "import";
+      but.innerHTML = "Import";
+      but.style.display = 'none';
+      document.body.appendChild(but);
+      document.body.appendChild(document.createElement("BR"));
 
-    const ta = document.createElement("TEXTAREA");
-    ta.id = "result";
-    document.body.appendChild(ta);
-    document.body.appendChild(document.createElement("BR"));
+      but.onclick = function() {
+        const files = inp.files;
+        if (files.length <= 0) {
+          return false;
+        }
+        
+        const fr = new FileReader();
+        
+        fr.onload = function(e) {
+          const result = JSON.parse(e.target.result);
+          onNewStore(result);
+        }
+        
+        fr.readAsText(files.item(0));
+      };
 
-    but.onclick = function() {
-      var files = inp.files;
-      console.log(files);
-      if (files.length <= 0) {
-        return false;
-      }
-      
-      var fr = new FileReader();
-      
-      fr.onload = function(e) { 
-      console.log(e);
-        var result = JSON.parse(e.target.result);
-        var formatted = JSON.stringify(result, null, 2);
-        ta.value = formatted;
-      }
-      
-      fr.readAsText(files.item(0));
-    };
+      but.click();
+    }
   }
 
   function onNew() {
@@ -158,6 +156,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     onLevelsCount: (levelsCount) => {
       dispatch(setLevelsCount(levelsCount));
+    },
+    onNewStore: (store) => {
+      dispatch(setStore(store));
     },
   };
 }
