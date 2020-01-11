@@ -62,27 +62,28 @@ export function joinManyFunctions(funs = []) {
 }
 
 export function treeToGraph(tree = [3, [1, 2]]) {
+  function getChildren(tree = [3, [1, 2]], parent = undefined) {
+    const children = [];
+    const name = `${tree[0]}`;
+
+    if (Array.isArray(tree[1][1])) {
+      for (let i = 1; i < tree.length; i++) {
+        children.push(getChildren(tree[i], name));
+      }
+    } else {
+      for (let i = 0; i < tree[1].length; i++) {
+        children.push({ name: `${tree[1][i]}`, parent: name });
+      }
+    }
+
+    return {
+      name,
+      children,
+      parent
+    };
+  }
+
   const data = getChildren(tree);
   return data;
 }
 
-export function getChildren(tree = [3, [1, 2]], parent = undefined) {
-  const children = [];
-  const name = `${tree[0]}`;
-
-  if (Array.isArray(tree[1][1])) {
-    for (let i = 1; i < tree.length; i++) {
-      children.push(getChildren(tree[i], name));
-    }
-  } else {
-    for (let i = 0; i < tree[1].length; i++) {
-      children.push({ name: `${tree[1][i]}`, parent: name });
-    }
-  }
-
-  return {
-    name,
-    children,
-    parent
-  };
-}
