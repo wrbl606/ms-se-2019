@@ -1,5 +1,6 @@
 import { generateTree } from './tree/generation'
 import { swap, newSwap, compareArrays } from './tree/swap'
+import {findAdress} from '../drzewa/src/tree/modification'
 
 function printTree (tree) {
   console.log('print tree', JSON.stringify(tree))
@@ -24,4 +25,5 @@ const swappedTree = newSwap(t1, a, b)
 console.log('swapped', typeof swappedTree)
 printTree(swappedTree)
 
-console.log(swappedTree[1][4][1][3] === c2 && swappedTree[1][4][1][0] === c1)
+findAdress(generateTree(3,2), 5);
+

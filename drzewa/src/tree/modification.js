@@ -87,3 +87,13 @@ export function treeToGraph(tree = [3, [1, 2]]) {
   return data;
 }
 
+
+/**
+ * @param {Array} tree Array - generated tree
+ * @param {Number} label Number of vertices for each node
+ * @returns {Array} Adress compatible with 'swap' function
+ */
+export function findAdress(tree, label){
+  console.log("findAdress");
+  console.log(tree, label)
+}
