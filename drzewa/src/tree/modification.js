@@ -87,19 +87,18 @@ export function treeToGraph(tree = [3, [1, 2]]) {
   return data;
 }
 
-
-export function findIndex(valueToSearch, theArray, currentIndex='') {
+export function findIndex(label, tree, currentIndex='') {
   let newIndex;  
-    if(Array.isArray(theArray)) {
-      for (var i = 0; i < theArray.length; i++) {
-        if(Array.isArray(theArray[i])) {
-          newIndex = findIndex(valueToSearch, theArray[i], currentIndex + i + ',');
+    if(Array.isArray(tree)) {
+      for (var i = 0; i < tree.length; i++) {
+        if(Array.isArray(tree[i])) {
+          newIndex = findIndex(label, tree[i], currentIndex + i + ',');
             if (newIndex) return newIndex;
-         } else if (theArray[i] == valueToSearch) {
+         } else if (tree[i] == label) {
              return (currentIndex + i).split(',');
          }
       }
-    } else if (theArray == valueToSearch) {
+    } else if (tree == label) {
         return (currentIndex + i).split(',');
     }
     return false;
