@@ -88,12 +88,19 @@ export function treeToGraph(tree = [3, [1, 2]]) {
 }
 
 
-/**
- * @param {Array} tree Array - generated tree
- * @param {Number} label Number of vertices for each node
- * @returns {Array} Adress compatible with 'swap' function
- */
-export function findAdress(tree, label){
-  console.log("findAdress");
-  console.log(tree, label)
+export function findIndex(valueToSearch, theArray, currentIndex='') {
+  let newIndex;  
+    if(Array.isArray(theArray)) {
+      for (var i = 0; i < theArray.length; i++) {
+        if(Array.isArray(theArray[i])) {
+          newIndex = findIndex(valueToSearch, theArray[i], currentIndex + i + ',');
+            if (newIndex) return newIndex;
+         } else if (theArray[i] == valueToSearch) {
+             return (currentIndex + i).split(',');
+         }
+      }
+    } else if (theArray == valueToSearch) {
+        return (currentIndex + i).split(',');
+    }
+    return false;
 }
