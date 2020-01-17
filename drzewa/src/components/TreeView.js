@@ -53,14 +53,19 @@ function TreeView (props) {
 
         const labelFromAddress = findIndex(labelFrom, tree)
         const labelToAddress = findIndex(labelTo, tree)
-        if (!labelFromAddress || !labelToAddress) {
-          onTreeGenerationError(`Invalid node index passed on level ${level}`)
+        if (!labelFromAddress) {
+          onTreeGenerationError(`${labelFrom} was not found`)
+          continue
+        }
+        if (!labelToAddress) {
+          onTreeGenerationError(`${labelTo} was not found`)
           continue
         }
         try {
           tree = newSwap(tree, labelFromAddress, labelToAddress)
         } catch (e) {
-          onTreeGenerationError(`Error while switching ${labelFrom} and ${labelTo} on level ${level}: ${e}`)
+          // onTreeGenerationError(`Error while switching ${labelFrom} and ${labelTo} on level ${level}: ${e}`)
+          continue
         }
       }
     }
