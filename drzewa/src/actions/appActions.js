@@ -1,5 +1,5 @@
 import { Actions, NO_FUNCTION_SELECTED, FunctionSelectionState } from '../reducers/appReducer'
-import store from '../store';
+import store from '../store'
 
 export function setStore (store = {}) {
   return {
@@ -15,14 +15,21 @@ export function setTree (tree = []) {
   }
 }
 
-export function setVerticesCount(verticesCount) {
+export function setTreeGenerationError (error = '') {
+  return {
+    type: Actions.SET_TREE_GENERATION_ERROR,
+    error
+  }
+}
+
+export function setVerticesCount (verticesCount) {
   return {
     type: Actions.SET_VERTICES_COUNT,
     verticesCount
   }
 }
 
-export function setLevelsCount(levelsCount) {
+export function setLevelsCount (levelsCount) {
   return {
     type: Actions.SET_LEVELS_COUNT,
     levelsCount
@@ -37,49 +44,49 @@ export function setFunctions (functions = []) {
 }
 
 export function addFunction (fun) {
-  const currentFunctions = [...store.getState().functions];
-  currentFunctions.push(fun);
-  return setFunctions(currentFunctions);
+  const currentFunctions = [...store.getState().functions]
+  currentFunctions.push(fun)
+  return setFunctions(currentFunctions)
 }
 
 export function setFunction (funIndex, fun) {
-  const currentFunctions = [...store.getState().functions];
-  currentFunctions[funIndex] = fun;
-  return setFunctions(currentFunctions);
+  const currentFunctions = [...store.getState().functions]
+  currentFunctions[funIndex] = fun
+  return setFunctions(currentFunctions)
 }
 
 export function createNewFunctionWithLevel (levelIndex, levelValue = []) {
-  const newFunc = createNewFunction();
+  const newFunc = createNewFunction()
   return addFunction({
     ...newFunc,
     levels: {
       ...newFunc.levels,
-      [levelIndex]: levelValue,
+      [levelIndex]: levelValue
     }
-  });
+  })
 }
 
-export function changeFunctionState(fun, functionIndex, newState) {
+export function changeFunctionState (fun, functionIndex, newState) {
   const newFunc = {
     ...fun,
-    selectionState: newState,
-  };
-  const currentFunctions = [...store.getState().functions];
-  currentFunctions[functionIndex] = newFunc;
-  return setFunctions(currentFunctions);
+    selectionState: newState
+  }
+  const currentFunctions = [...store.getState().functions]
+  currentFunctions[functionIndex] = newFunc
+  return setFunctions(currentFunctions)
 }
 
-export function addLevelToFunction(fun, functionIndex, newLevelIndex) {
+export function addLevelToFunction (fun, functionIndex, newLevelIndex) {
   const newFunc = {
     ...fun,
     levels: {
       ...fun.levels,
       [newLevelIndex]: []
-    },
-  };
-  const currentFunctions = [...store.getState().functions];
-  currentFunctions[functionIndex] = newFunc;
-  return setFunctions(currentFunctions);
+    }
+  }
+  const currentFunctions = [...store.getState().functions]
+  currentFunctions[functionIndex] = newFunc
+  return setFunctions(currentFunctions)
 }
 
 export function setCurrentFunctionIndex (currentFunctionIndex = NO_FUNCTION_SELECTED) {
@@ -96,10 +103,10 @@ export function setLevelSelectValue (levelSelectValue = '0') {
   }
 }
 
-function createNewFunction() {
+function createNewFunction () {
   return {
     label: (store.getState().functions.length + 1).toString(),
     levels: {},
-    selectionState: FunctionSelectionState.ENABLED,
-  };
+    selectionState: FunctionSelectionState.ENABLED
+  }
 }

@@ -1,5 +1,5 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from 'react'
+import { connect } from 'react-redux'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
 import Grid from '@material-ui/core/Grid'
@@ -17,8 +17,8 @@ import {
   FunctionSelectionState,
   NO_FUNCTION_SELECTED
 } from '../reducers/appReducer'
-import { makeStyles } from '@material-ui/core';
-import { changeFunctionState, setCurrentFunctionIndex, setLevelSelectValue, addLevelToFunction, createNewFunctionWithLevel, addFunction, setFunction } from '../actions/appActions';
+import { makeStyles } from '@material-ui/core'
+import { changeFunctionState, setCurrentFunctionIndex, setLevelSelectValue, addLevelToFunction, createNewFunctionWithLevel, addFunction, setFunction } from '../actions/appActions'
 import { nodesOnLvl } from '../tree/generation'
 import { reverseFunction, joinManyFunctions } from '../tree/modification'
 const Spacer = require('react-spacer')
@@ -61,13 +61,13 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(2)
   },
   mainButton: {
-    margin: `${theme.spacing(1)}px 5%`,
+    margin: `${theme.spacing(1)}px 5%`
   }
 }))
 const drawerWidth = 650
 
-function SideBar(props) {
-  const classes = useStyles();
+function SideBar (props) {
+  const classes = useStyles()
   const {
     functions,
     currentFunction,
@@ -75,6 +75,7 @@ function SideBar(props) {
     levelsCount,
     verticesCount,
     levelSelectValue,
+    treeGenerationError,
     onFunctionSelectionStateChange,
     onMarkFunctionAsCurrent,
     onLevelSelectValueChange,
@@ -84,88 +85,88 @@ function SideBar(props) {
     onUpdateFunction
   } = props
 
-  function determineButtonColor(selectionState = 'unknown') {
-    switch(selectionState) {
-      case FunctionSelectionState.ENABLED: return 'secondary';
-      case FunctionSelectionState.MARKED: return 'primary';
-      default: return 'default';
+  function determineButtonColor (selectionState = 'unknown') {
+    switch (selectionState) {
+      case FunctionSelectionState.ENABLED: return 'secondary'
+      case FunctionSelectionState.MARKED: return 'primary'
+      default: return 'default'
     }
   }
 
-  function changeFunctionState(fun, funIndex) {
-    const isSelected = currentFunctionIndex === funIndex;
+  function changeFunctionState (fun, funIndex) {
+    const isSelected = currentFunctionIndex === funIndex
 
     if (!isSelected) {
-      onMarkFunctionAsCurrent(funIndex);
-      return;
+      onMarkFunctionAsCurrent(funIndex)
+      return
     }
 
-    const currentFunctionState = fun.selectionState;
-    const stateCycle = [FunctionSelectionState.DISABLED, FunctionSelectionState.ENABLED, FunctionSelectionState.MARKED];
+    const currentFunctionState = fun.selectionState
+    const stateCycle = [FunctionSelectionState.DISABLED, FunctionSelectionState.ENABLED, FunctionSelectionState.MARKED]
     const nextFunctionState = stateCycle[(stateCycle.findIndex((state) => state === currentFunctionState) + 1) % (stateCycle.length)]
-    onFunctionSelectionStateChange(fun, funIndex, nextFunctionState);
+    onFunctionSelectionStateChange(fun, funIndex, nextFunctionState)
   }
 
-  function determineAllowedLevelsToAdd() {
-    const allAvailableLevels = new Array(levelsCount).fill(0).map((_, index) => index.toString());
-    allAvailableLevels.shift();
-    const currentlyUsedLevels = currentFunction ? Object.keys(currentFunction.levels).map((l) => l.toString()) : [];
-    const allowedLevels = [];
+  function determineAllowedLevelsToAdd () {
+    const allAvailableLevels = new Array(levelsCount).fill(0).map((_, index) => index.toString())
+    allAvailableLevels.shift()
+    const currentlyUsedLevels = currentFunction ? Object.keys(currentFunction.levels).map((l) => l.toString()) : []
+    const allowedLevels = []
     for (const level of allAvailableLevels) {
       if (!currentlyUsedLevels.includes(level)) {
-        allowedLevels.push(level);
+        allowedLevels.push(level)
       }
     }
-    return allowedLevels;
+    return allowedLevels
   }
 
-  function handleAddLevelToFunction() {
+  function handleAddLevelToFunction () {
     if (!currentFunction) {
-      const functionsCount = functions.length;
-      onAddFunctionWithLevel(levelSelectValue, []);
-      onMarkFunctionAsCurrent(functionsCount);
-      return;
+      const functionsCount = functions.length
+      onAddFunctionWithLevel(levelSelectValue, [])
+      onMarkFunctionAsCurrent(functionsCount)
+      return
     }
-    onAddLevelToFunction(currentFunction, currentFunctionIndex, levelSelectValue);
+    onAddLevelToFunction(currentFunction, currentFunctionIndex, levelSelectValue)
   }
 
-  function handleAddReversedSelectedFunction() {
-    const functionToAdd = reverseFunction(currentFunction);
-    functionToAdd.label = `${functions.length + 1}`;
-    functionToAdd.selectionState = currentFunction.selectionState;
-    onAddFunction(functionToAdd);
+  function handleAddReversedSelectedFunction () {
+    const functionToAdd = reverseFunction(currentFunction)
+    functionToAdd.label = `${functions.length + 1}`
+    functionToAdd.selectionState = currentFunction.selectionState
+    onAddFunction(functionToAdd)
   }
 
-  function joinMarkedFunctions() {
+  function joinMarkedFunctions () {
     // must find at least two marked functions to work
-    const functionsToJoin = functions.filter((f) => f.selectionState === FunctionSelectionState.MARKED);
-    const joinedFunction = joinManyFunctions(functionsToJoin);
-    joinedFunction.label = `${functions.length + 1}`;
-    joinedFunction.selectionState = FunctionSelectionState.ENABLED;
-    onAddFunction(joinedFunction);
+    const functionsToJoin = functions.filter((f) => f.selectionState === FunctionSelectionState.MARKED)
+    const joinedFunction = joinManyFunctions(functionsToJoin)
+    joinedFunction.label = `${functions.length + 1}`
+    joinedFunction.selectionState = FunctionSelectionState.ENABLED
+    onAddFunction(joinedFunction)
   }
 
-  function onLevelFunctionChanged(level, newText) {
+  function onLevelFunctionChanged (level, newText) {
     const newFunction = {
       ...currentFunction,
       levels: {
         ...currentFunction.levels,
-        [level]: newText.split(',').map((text) => isNaN(parseInt(text)) ? text : parseInt(text)),
+        [level]: newText.split(',').map((text) => isNaN(parseInt(text)) ? text : parseInt(text))
       }
-    };
-    onUpdateFunction(currentFunctionIndex, newFunction);
+    }
+    onUpdateFunction(currentFunctionIndex, newFunction)
   }
 
   return (
     <Drawer className={classes.drawer}
       variant='permanent'
-      classes={{paper: classes.drawerPaper}}
+      classes={{ paper: classes.drawerPaper }}
       anchor='right'>
       <div className={classes.toolbar}>
-        <h2 align='center'>Edycja drzewa</h2> 
-      </div> 
-      <Divider/>
-      <Spacer height='32px'/>
+        <h2 align='center'>Edycja drzewa</h2>
+      </div>
+      <Divider />
+      <Spacer height='32px' />
       <Grid container style={
         {
           paddingLeft: '5%',
@@ -173,179 +174,176 @@ function SideBar(props) {
         }
       }>
         <Grid item xs={6}>
-        <FormControl className={
-          classes.formControl
-        }
-        align='center'
-        variant='outlined'>
-          <InputLabel htmlFor='level-select'
-          shrink>
-          Poziom 
-          </InputLabel> 
-          <Select 
-            onChange={(event) => onLevelSelectValueChange(event.target.value)}
-            value={levelSelectValue}
-            disabled={determineAllowedLevelsToAdd().length === 0}
-            labelWidth={56}
-            inputProps={
+          <FormControl
+            className={
+              classes.formControl
+            }
+            align='center'
+            variant='outlined'>
+            <InputLabel htmlFor='level-select'
+              shrink>
+          Poziom
+            </InputLabel>
+            <Select
+              onChange={(event) => onLevelSelectValueChange(event.target.value)}
+              value={levelSelectValue}
+              disabled={determineAllowedLevelsToAdd().length === 0}
+              labelWidth={56}
+              inputProps={
+                {
+                  name: 'level-select',
+                  id: 'level-select'
+                }
+              }>
               {
-                name: 'level-select',
-                id: 'level-select'
-              }
-            }> 
-            {
-            determineAllowedLevelsToAdd().map((level) => (
-                <MenuItem key={level}
-                  value={level}
-                  style={{textAlign: 'left'}}> 
-                    { level } 
-                </MenuItem>
-              )
-            )} 
-            </Select> 
-          </FormControl> 
-        </Grid> 
+                determineAllowedLevelsToAdd().map((level) => (
+                  <MenuItem key={level}
+                    value={level}
+                    style={{ textAlign: 'left' }}>
+                    { level }
+                  </MenuItem>
+                )
+                )}
+            </Select>
+          </FormControl>
+        </Grid>
         <Grid item xs={
           6
         }>
           <TextField id='standard-number'
-          label='Ilość wezłów'
-          disabled className={
-            classes.textField
-          }
-          InputLabelProps={
-            {
-              shrink: true
+            label='Ilość wezłów'
+            disabled className={
+              classes.textField
             }
-          }
-          margin='normal'
-          variant='outlined'
-          value={`${nodesOnLvl(parseInt(levelSelectValue, 10), verticesCount)}`} />
-        </Grid> 
-      </Grid> 
+            InputLabelProps={
+              {
+                shrink: true
+              }
+            }
+            margin='normal'
+            variant='outlined'
+            value={`${nodesOnLvl(parseInt(levelSelectValue, 10), verticesCount)}`} />
+        </Grid>
+      </Grid>
       <Button variant='contained'
-      color='secondary'
-      onClick={handleAddLevelToFunction}
-      disabled={determineAllowedLevelsToAdd().length === 0}
-      className={
-        classes.mainButton
-      }>
-        Dodaj 
-      </Button> 
+        color='secondary'
+        onClick={handleAddLevelToFunction}
+        disabled={determineAllowedLevelsToAdd().length === 0}
+        className={
+          classes.mainButton
+        }>
+        Dodaj
+      </Button>
       <Grid container item xs={
         12
       }>
-        <Grid item xs={
-          6
-        }
-        className={
-          classes.separatorRight
-        }>
-        <h3 style={
-          {
-            marginLeft: '5%'
-          }
-        }>
-          Składniki funkcji 
-        </h3>
-        <List style={
-          {
-            width: '100%'
-          }
-        }>
-        {
-          currentFunctionIndex === NO_FUNCTION_SELECTED && ( 
-            <Typography 
-            align='center'
-            variant='body2'> 
+        <Grid
+          item xs={6}
+          className={classes.separatorRight}
+        >
+          <h3 style={
+            {
+              marginLeft: '5%'
+            }
+          }>
+          Składniki funkcji
+          </h3>
+          <Typography color='secondary' style={{ textAlign: 'center', fontWeight: 'bold' }}>
+            {treeGenerationError}
+          </Typography>
+          <List style={
+            {
+              width: '100%'
+            }
+          }>
+            {
+              currentFunctionIndex === NO_FUNCTION_SELECTED && (
+                <Typography
+                  align='center'
+                  variant='body2'>
               Nie wybrano żadnej funkcji
-            </Typography>
-          )
-        }
-        {
-          currentFunction && Object.keys(currentFunction.levels) === 0 && (
-            <Typography 
-            align='center'
-            variant='body2'>
+                </Typography>
+              )
+            }
+            {
+              currentFunction && Object.keys(currentFunction.levels) === 0 && (
+                <Typography
+                  align='center'
+                  variant='body2'>
               Wybrana funkcja nie posiada przekształceń.
-            </Typography>
-          )
-        }
-        {
-          currentFunction && Object.keys(currentFunction.levels).map((key) => ( 
-            <ListItem key={
-              `func-${currentFunction.label}-${key}`
-            }>
-              <TextField 
-                style={{width: '100%'}}
-                label={`Poziom ${key}`}
-                variant="outlined"
-                value={currentFunction.levels[key]}
-                onChange={(event) => onLevelFunctionChanged(key, event.target.value)} />
-            </ListItem>
-          ))
-        } 
-        </List> 
-        <Button variant='contained'
-        className={classes.button}
-        disabled={currentFunctionIndex === NO_FUNCTION_SELECTED}>
-          Zastosuj
-        </Button> 
-      </Grid> 
+                </Typography>
+              )
+            }
+            {
+              currentFunction && Object.keys(currentFunction.levels).map((key) => (
+                <ListItem key={
+                  `func-${currentFunction.label}-${key}`
+                }>
+                  <TextField
+                    style={{ width: '100%' }}
+                    label={`Poziom ${key}`}
+                    variant='outlined'
+                    value={currentFunction.levels[key]}
+                    onChange={(event) => onLevelFunctionChanged(key, event.target.value)} />
+                </ListItem>
+              ))
+            }
+          </List>
+        </Grid>
         <Grid item xs={
           6
         }>
-        <h3 style={
-          {
-            marginLeft: '5%'
-          }
-        }>
-          Funkcje do złożenia 
-        </h3> 
-        <div> 
-          {
-            functions.map((fun, index) => ( 
-              <Fab variant='round'
-                color={determineButtonColor(fun.selectionState)}
-                onClick={() => changeFunctionState(fun, index)}
-                className={classes.fab}
-                size={index === currentFunctionIndex ? 'medium' : 'small'}
-                key={`fab-func-${index}`}> 
-                { fun.label }
-              </Fab>
-            ))
-          }
-          <Fab variant='round'
-            color='default'
-            onClick={() => onMarkFunctionAsCurrent(NO_FUNCTION_SELECTED)}
-            className={classes.fab}
-            size={'small'}
-            key={`fab-func-new`}> 
+          <h3 style={
+            {
+              marginLeft: '5%'
+            }
+          }>
+          Funkcje do złożenia
+          </h3>
+          <div>
+            {
+              functions.map((fun, index) => (
+                <Fab variant='round'
+                  color={determineButtonColor(fun.selectionState)}
+                  onClick={() => changeFunctionState(fun, index)}
+                  className={classes.fab}
+                  size={index === currentFunctionIndex ? 'medium' : 'small'}
+                  key={`fab-func-${index}`}>
+                  { fun.label }
+                </Fab>
+              ))
+            }
+            <Fab variant='round'
+              color='default'
+              onClick={() => onMarkFunctionAsCurrent(NO_FUNCTION_SELECTED)}
+              className={classes.fab}
+              size={'small'}
+              key={`fab-func-new`}>
             +
-          </Fab>
-        </div> 
-        <Button 
-          className={classes.button}
-          disabled={functions.filter((f) => f.selectionState === FunctionSelectionState.MARKED).length < 2}
-          onClick={joinMarkedFunctions}
-          variant='contained'>
-          Złóż funkcje 
-        </Button>
-        <Button
-          className={classes.button}
-          disabled={!currentFunction}
-          onClick={handleAddReversedSelectedFunction}
-          variant='contained'>
+            </Fab>
+          </div>
+          <Button
+            className={classes.button}
+            disabled={functions.filter((f) => f.selectionState === FunctionSelectionState.MARKED).length < 2}
+            onClick={joinMarkedFunctions}
+            variant='contained'>
+          Złóż funkcje
+          </Button>
+          <Button
+            className={classes.button}
+            disabled={!currentFunction}
+            onClick={handleAddReversedSelectedFunction}
+            variant='contained'>
             Odwróć zaznaczoną
-        </Button>
-        </Grid> 
-      </Grid> 
+          </Button>
+        </Grid>
+      </Grid>
     </Drawer>
   )
 }
 
 const mapStateToProps = (state) => {
-  const currentFunction = state.functions[state.currentFunctionIndex] || null;
+  const currentFunction = state.functions[state.currentFunctionIndex] || null
   return {
     functions: state.functions,
     currentFunctionIndex: state.currentFunctionIndex,
@@ -353,37 +351,38 @@ const mapStateToProps = (state) => {
     levelsCount: state.levelsCount,
     verticesCount: state.verticesCount,
     levelSelectValue: state.levelSelectValue,
+    treeGenerationError: state.treeGenerationError
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onFunctionSelectionStateChange: (fun, functionIndex, newState) => {
-      dispatch(changeFunctionState(fun, functionIndex, newState));
+      dispatch(changeFunctionState(fun, functionIndex, newState))
     },
     onMarkFunctionAsCurrent: (functionIndex) => {
-      dispatch(setCurrentFunctionIndex(functionIndex));
+      dispatch(setCurrentFunctionIndex(functionIndex))
     },
     onLevelSelectValueChange: (newSelectValue) => {
-      dispatch(setLevelSelectValue(newSelectValue));
+      dispatch(setLevelSelectValue(newSelectValue))
     },
     onAddLevelToFunction: (fun, functionIndex, levelIndex) => {
-      dispatch(addLevelToFunction(fun, functionIndex, levelIndex));
+      dispatch(addLevelToFunction(fun, functionIndex, levelIndex))
     },
     onAddFunctionWithLevel: (levelIndex, levelValue) => {
-      dispatch(createNewFunctionWithLevel(levelIndex, levelValue));
+      dispatch(createNewFunctionWithLevel(levelIndex, levelValue))
     },
     onAddFunction: (fun) => {
       dispatch(addFunction(fun))
     },
     onUpdateFunction: (funIndex, fun) => {
-      dispatch(setFunction(funIndex, fun));
+      dispatch(setFunction(funIndex, fun))
     }
-  };
+  }
 }
 
 const SidebarWithState = connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(SideBar)
 export default SidebarWithState

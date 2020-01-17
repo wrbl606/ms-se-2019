@@ -6,5 +6,6 @@
   "javascript.format.enable": false,
   "standard.enable": true,
   "standard.autoFixOnSave": true,
-  "standard.usePackageJson": true
+  "standard.usePackageJson": true,
+  "standard.semistandard": true,
 }

@@ -35,16 +35,19 @@ export function swap (branch1, branch2) {
  * @param {Array} list2
  */
 export function newSwap (tree, list1, list2) {
-  // TODO: zapytać Maćka po co odwraca tablice w wersji Pythonowej
+  if (compareArrays(list1, list2)) {
+    return tree
+  }
+
+  if (!compareArrays(getParents(list1), getParents(list2))) {
+    throw new Error(`Cannot swap ${list1} and ${list2}. Different parents.`)
+  }
+
   const newTree = [...tree]
   if (compareArrays(list1[0], list2[0])) {
-    const newList1 = [...list1]
-    newList1.shift()
-    const newList2 = [...list2]
-    newList2.shift()
     const newTree2 = [...newTree]
     delete newTree2[list1[0]]
-    newTree2[list1[0]] = newSwap(newTree[list1[0]], newList1, newList2)
+    newTree2[list1[0]] = newSwap(newTree[list1[0]], removeParent(list1), removeParent(list2))
     return newTree2
   } else {
     const a = [...list1].pop()
@@ -56,9 +59,52 @@ export function newSwap (tree, list1, list2) {
   }
 }
 
+export function swap2 (tree, list1, list2) {
+  if (compareArrays(list1, list2)) {
+    return tree
+  }
+
+  if (!compareArrays(getParents(list1), getParents(list2))) {
+    console.error('Different parents! Cannot swap.')
+    return tree
+  }
+
+  if (compareArrays(list1[0], list2[0])) {
+    swap2(tree[list1[0]], removeParent(list1), removeParent(list2))
+  } else {
+    const a = list1[list1.length - 1]
+    const b = list2[list2.length - 1]
+    const swapCache = tree[a]
+    tree[a] = tree[b]
+    tree[b] = swapCache
+    return tree
+  }
+}
+
+export function swap3 (tree, list1, list2) {
+  const swappedTree = [...tree]
+  const swapPath1 = list1.reduce((accumulator, current, index) => index === 1 ? `[${accumulator}][${current}]` : `${accumulator}[${current}]`)
+  const swapPath2 = list2.reduce((accumulator, current, index) => index === 1 ? `[${accumulator}][${current}]` : `${accumulator}[${current}]`)
+  console.log(swapPath1, swapPath2)
+  eval(`const cache = swappedTree${swapPath1}; swappedTree${swapPath1} = swappedTree${swapPath2}; swappedTree${swapPath2} = cache;`)
+  return swappedTree
+}
+
+function getParents (tree) {
+  const parents = [...tree]
+  parents.pop()
+  return parents
+}
+
+function removeParent (tree) {
+  const children = [...tree]
+  children.shift()
+  return children
+}
+
 export function compareArrays (array1, array2) {
   if (typeof array1 !== 'object' || typeof array2 !== 'object') {
     return array1 === array2
   }
-  return array1.length === array2.length && array1.sort().every(function (value, index) { return value === array2.sort()[index] })
+  return array1.length === array2.length && array1.every(function (value, index) { return value === array2[index] })
 }

@@ -58,7 +58,7 @@ export function generateTree (n, p) {
     for (let i = 0; i < nodesOnLvl(j, p); i++) {
       temp2.push(tree[i])
       if ((i + 1) % p === 0 && i !== 0) {
-        temp.push([arr.pop(), ...temp2])
+        temp.push([arr.pop(), temp2])
         temp2 = []
       }
     }
