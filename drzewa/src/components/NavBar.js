@@ -8,6 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import { setVerticesCount, setLevelsCount, setStore, setFunctions } from '../actions/appActions';
 import Canvg from 'canvg';
+import { Document as DocxDocument, Media as DocxMedia, Paragraph as DocxParagraph, Packer as DocxPacker } from 'docx'
 
 const drawerWidth = 650;
 const useStyles = makeStyles({
@@ -20,6 +21,8 @@ const useStyles = makeStyles({
 function NavBar(props) {
   const classes = useStyles();
   const {
+    levelsCount,
+    verticesCount,
     store,
     onVerticesCount,
     onLevelsCount,
@@ -112,7 +115,7 @@ function NavBar(props) {
     const ctx = canvas.getContext('2d');
     const v = Canvg.fromString(ctx, createSvg());
     v.start();
-    return canvas.toDataURL('image/png');
+    return canvas.toDataURL('image/png')
   }
 
   async function exportPdf() {
@@ -135,6 +138,43 @@ function NavBar(props) {
     /*eslint-enable */
   }
 
+  function createResponsiveImage(doc, image, imageSize) {
+    const { width, height } = imageSize
+    let scale = 1;
+    if (width > height) {
+      const docWidth = 600;
+      scale = width / docWidth;
+    } else {
+      const docHeight = 1000;
+      scale = height / docHeight;
+    }
+
+    if (scale > 1) {
+      return DocxMedia.addImage(doc, image, (width / scale), (height / scale));
+    } else {
+      return DocxMedia.addImage(doc, image, width, height);
+    }
+  }
+
+  function treeSize() {
+    return {
+      width: levelsCount * 150,
+      height: Math.pow(verticesCount, levelsCount - 1) * 45
+    }
+  }
+
+  function exportDocx() {
+    const png = createPng();
+    const doc = new DocxDocument();
+    const image = createResponsiveImage(doc, png, treeSize());
+    doc.addSection({
+      children: [new DocxParagraph(image)]
+    })
+    DocxPacker.toBlob(doc).then((blob) => {
+      download(blob, 'tree.docx', 'file/docx')
+    });
+  }
+
   return (
     <AppBar position = 'fixed'
       className = {
@@ -144,48 +184,28 @@ function NavBar(props) {
         0
       }>
       <Toolbar>
-        <Button color = 'inherit'
-          onClick = {
-            function (){
-              onUpload({a: 123, b: "4 5 6"})
-          }
-        }
-        style = {
-          {
-            alignSelf: 'right'
-          }
-        }>
+        <Button 
+          color='inherit'
+          onClick = {onUpload}
+          style = {{ alignSelf: 'right'}}>
           Otwórz 
         </Button>
-        <Button color = 'inherit'
-          onClick = {
-            function (){
-              onDownload({a: 123, b: "4 5 6"})
-          }
-        }
-        style = {
-          {
-            alignSelf: 'right'
-          }
-        }>
+        <Button 
+          color='inherit'
+          onClick={onDownload}
+          style = {{ alignSelf: 'right'}}>
           Zapisz
         </Button>
         <Button 
-          color = 'inherit'
-          onClick = {onNew}
-          style = {
-            {
-              alignSelf: 'right'
-            }
-          }
-        >
+          color='inherit'
+          onClick={onNew}
+          style={{ alignSelf: 'right'}}>
           Nowy
         </Button>
         <Button 
           color='inherit'
           onClick={exportSvg}
-          style={{ alignSelf: 'right' }}
-        >
+          style={{ alignSelf: 'right' }}>
           Eksport SVG
         </Button>
         <Button 
@@ -194,6 +214,13 @@ function NavBar(props) {
           style={{ alignSelf: 'right' }}
         >
           Eksport PDF
+        </Button>
+        <Button 
+          color='inherit'
+          onClick={exportDocx}
+          style={{ alignSelf: 'right' }}
+        >
+          Eksport DOCX
         </Button>
         <canvas style={{ display: 'none' }}></canvas>
       </Toolbar>
