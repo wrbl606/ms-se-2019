@@ -7,6 +7,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import { setVerticesCount, setLevelsCount, setStore, setFunctions } from '../actions/appActions';
+import Canvg from 'canvg';
 
 const drawerWidth = 650;
 const useStyles = makeStyles({
@@ -94,13 +95,44 @@ function NavBar(props) {
     onLevelsCount(levels);
   }
 
-  function exportSvg() {
+  function createSvg() {
     const treeSvg = document.querySelector('#tree svg');
-    const treeSvgAsText = treeSvg.outerHTML
+    return treeSvg.outerHTML
       .replace(/class="link"/ig, 'fill="transparent" stroke="black"')
       .replace(/<circle/ig, '<circle fill="white" stroke="black"')
       .replace(/class="graph-text"/ig, 'fill="black"');
-    download(treeSvgAsText, "tree.svg", "text/svg");
+  }
+
+  function exportSvg() {
+    download(createSvg(), "tree.svg", "text/svg");
+  }
+
+  function createPng() {
+    const canvas = document.querySelector('canvas');
+    const ctx = canvas.getContext('2d');
+    const v = Canvg.fromString(ctx, createSvg());
+    v.start();
+    return canvas.toDataURL('image/png');
+  }
+
+  async function exportPdf() {
+    const png = createPng();
+    /*eslint-disable */
+    const doc = new PDFDocument();
+    const stream = doc.pipe(blobStream());
+
+    doc.image(png, {
+      fit: [500, 700], // A4 paper size in points
+      align: 'center',
+      valign: 'center'
+    });
+
+    doc.end();
+    stream.on('finish', () => {
+      const blob = stream.toBlob('application/pdf');
+      download(blob, 'tree.pdf', 'application/pdf');
+    });
+    /*eslint-enable */
   }
 
   return (
@@ -156,6 +188,14 @@ function NavBar(props) {
         >
           Eksport SVG
         </Button>
+        <Button 
+          color='inherit'
+          onClick={exportPdf}
+          style={{ alignSelf: 'right' }}
+        >
+          Eksport PDF
+        </Button>
+        <canvas style={{ display: 'none' }}></canvas>
       </Toolbar>
     </AppBar>)
 }
