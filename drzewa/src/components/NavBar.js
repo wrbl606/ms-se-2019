@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import { setVerticesCount, setLevelsCount, setStore, setFunctions } from '../actions/appActions';
 import Canvg from 'canvg';
 import { Document as DocxDocument, Media as DocxMedia, Paragraph as DocxParagraph, Packer as DocxPacker } from 'docx'
+import { Typography } from '@material-ui/core';
 
 const drawerWidth = 650;
 const useStyles = makeStyles({
@@ -16,6 +17,14 @@ const useStyles = makeStyles({
     width: `calc(100% - ${drawerWidth}px)`,
     marginRight: drawerWidth
   },
+  exportLabel: {
+    marginLeft: '1em',
+  },
+  exportButton: {
+    fontSize: '.7em',
+    fontWeight: 'bold',
+    marginLeft: '.3em',
+  }
 });
 
 function NavBar(props) {
@@ -186,6 +195,12 @@ function NavBar(props) {
       <Toolbar>
         <Button 
           color='inherit'
+          onClick={onNew}
+          style={{ alignSelf: 'right'}}>
+          Nowy
+        </Button>
+        <Button 
+          color='inherit'
           onClick = {onUpload}
           style = {{ alignSelf: 'right'}}>
           Otwórz 
@@ -196,31 +211,34 @@ function NavBar(props) {
           style = {{ alignSelf: 'right'}}>
           Zapisz
         </Button>
-        <Button 
-          color='inherit'
-          onClick={onNew}
-          style={{ alignSelf: 'right'}}>
-          Nowy
-        </Button>
+        <Typography variant='button' className={classes.exportLabel}>
+          Eksport:
+        </Typography>
         <Button 
           color='inherit'
           onClick={exportSvg}
+          variant='outlined'
+          className={classes.exportButton}
           style={{ alignSelf: 'right' }}>
-          Eksport SVG
+          SVG
         </Button>
         <Button 
           color='inherit'
           onClick={exportPdf}
+          variant='outlined'
+          className={classes.exportButton}
           style={{ alignSelf: 'right' }}
         >
-          Eksport PDF
+          PDF
         </Button>
         <Button 
           color='inherit'
           onClick={exportDocx}
+          variant='outlined'
+          className={classes.exportButton}
           style={{ alignSelf: 'right' }}
         >
-          Eksport DOCX
+          DOCX
         </Button>
         <canvas style={{ display: 'none' }}></canvas>
       </Toolbar>
