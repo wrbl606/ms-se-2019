@@ -74,9 +74,9 @@ function TreeView (props) {
   }
 
   return (
-    <main className={
-      classes.content
-    }>
+    <main 
+      id="tree" 
+      className={classes.content}>
       <div className={
         classes.toolbar
       } />

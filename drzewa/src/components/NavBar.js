@@ -94,6 +94,15 @@ function NavBar(props) {
     onLevelsCount(levels);
   }
 
+  function exportSvg() {
+    const treeSvg = document.querySelector('#tree svg');
+    const treeSvgAsText = treeSvg.outerHTML
+      .replace(/class="link"/ig, 'fill="transparent" stroke="black"')
+      .replace(/class="node"/ig, 'fill="white" stroke="black"')
+      .replace(/class="graph-text"/ig, 'fill="black" stroke="transparent"');
+    download(treeSvgAsText, "tree.svg", "text/svg");
+  }
+
   return (
     <AppBar position = 'fixed'
       className = {
@@ -139,6 +148,13 @@ function NavBar(props) {
           }
         >
           Nowy
+        </Button>
+        <Button 
+          color='inherit'
+          onClick={exportSvg}
+          style={{ alignSelf: 'right' }}
+        >
+          Eksport SVG
         </Button>
       </Toolbar>
     </AppBar>)
