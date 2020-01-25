@@ -98,8 +98,8 @@ function NavBar(props) {
     const treeSvg = document.querySelector('#tree svg');
     const treeSvgAsText = treeSvg.outerHTML
       .replace(/class="link"/ig, 'fill="transparent" stroke="black"')
-      .replace(/class="node"/ig, 'fill="white" stroke="black"')
-      .replace(/class="graph-text"/ig, 'fill="black" stroke="transparent"');
+      .replace(/<circle/ig, '<circle fill="white" stroke="black"')
+      .replace(/class="graph-text"/ig, 'fill="black"');
     download(treeSvgAsText, "tree.svg", "text/svg");
   }
 
