@@ -6,7 +6,7 @@ import {
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
-import { setVerticesCount, setLevelsCount, setStore } from '../actions/appActions';
+import { setVerticesCount, setLevelsCount, setStore, setFunctions } from '../actions/appActions';
 
 const drawerWidth = 650;
 const useStyles = makeStyles({
@@ -22,7 +22,8 @@ function NavBar(props) {
     store,
     onVerticesCount,
     onLevelsCount,
-    onNewStore
+    onNewStore,
+    clearFunctions
   } = props;
 
   function download(content, fileName, contentType) {
@@ -88,6 +89,7 @@ function NavBar(props) {
       return;
     }
 
+    clearFunctions();
     onVerticesCount(vertices);
     onLevelsCount(levels);
   }
@@ -157,6 +159,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     onLevelsCount: (levelsCount) => {
       dispatch(setLevelsCount(levelsCount));
+    },
+    clearFunctions: () => {
+      dispatch(setFunctions([]))
     },
     onNewStore: (store) => {
       dispatch(setStore(store));
