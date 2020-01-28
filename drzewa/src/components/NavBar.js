@@ -91,14 +91,14 @@ function NavBar(props) {
   }
 
   function onNew() {
-    const vertices = parseInt(prompt('Liczba rozgałęzień: ', '3'));
-    if (isNaN(vertices)) {
-      alert('Niepoprawna liczba rozgałęzień');
+    const vertices = parseInt(prompt('Liczba rozgałęzień:\nMinimum 2.', '3'));
+    if (isNaN(vertices) || vertices <= 1) {
+      alert('Niepoprawna liczba rozgałęzień.\nMinimum 2.');
       return;
     }
-    const levels = parseInt(prompt('Liczba poziomów', '3'));
-    if (isNaN(levels)) {
-      alert('Niepoprawna liczba poziomów');
+    const levels = parseInt(prompt('Liczba poziomów:\nMinimum 2.', '3'));
+    if (isNaN(levels) || levels <= 1) {
+      alert('Niepoprawna liczba poziomów.\nMinimum 2.');
       return;
     }
 
