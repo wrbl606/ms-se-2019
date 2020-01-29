@@ -54,12 +54,15 @@ function TreeView (props) {
         const labelFromAddress = findIndex(labelFrom, tree)
         const labelToAddress = findIndex(labelTo, tree)
         if (!labelFromAddress) {
-          onTreeGenerationError(`${labelFrom} was not found`)
+          onTreeGenerationError(`${labelFrom} nie zostało znalezione`)
           continue
         }
         if (!labelToAddress) {
-          onTreeGenerationError(`${labelTo} was not found`)
+          onTreeGenerationError(`${labelTo} nie zostało znalezione`)
           continue
+        }
+        if (labelFromAddress.length !== labelToAddress.length) {
+          onTreeGenerationError(`${labelFrom} jest na innym poziomie niż ${labelTo}`)
         }
         try {
           tree = newSwap(tree, labelFromAddress, labelToAddress)
