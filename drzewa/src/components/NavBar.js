@@ -127,6 +127,16 @@ function NavBar(props) {
     return canvas.toDataURL('image/png')
   }
 
+  function exportPng() {
+    const canvas = document.querySelector('canvas');
+    const ctx = canvas.getContext('2d');
+    const v = Canvg.fromString(ctx, createSvg());
+    v.start();
+    canvas.toBlob((blob) => {
+      download(blob, 'tree.png', 'image/png');
+    });
+  }
+
   async function exportPdf() {
     const png = createPng();
     /*eslint-disable */
@@ -221,6 +231,14 @@ function NavBar(props) {
           className={classes.exportButton}
           style={{ alignSelf: 'right' }}>
           SVG
+        </Button>
+        <Button 
+          color='inherit'
+          onClick={exportPng}
+          variant='outlined'
+          className={classes.exportButton}
+          style={{ alignSelf: 'right' }}>
+          PNG
         </Button>
         <Button 
           color='inherit'
